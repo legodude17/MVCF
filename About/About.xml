@@ -4,7 +4,8 @@
 	<supportedVersions>
 			<li>1.2</li>
 	</supportedVersions>
-	<description>A library/patch set allowing pawns to have and use multiple ranged verbs, including from inventory items, health conditions, prosthetics, clothing, and armour.</description>
+	<description>v0.0.1
+	A library/patch set allowing pawns to have and use multiple ranged verbs, including from inventory items, health conditions, prosthetics, clothing, and armour.</description>
 	<packageId>legodude17.mvcf</packageId>
 	<modDependencies>
 		<li>
