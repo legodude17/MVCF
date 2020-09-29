@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ea671d51-6fd9-4600-9c41-8f333c8e76d6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MCVF/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MCVF/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="ea671d51-6fd9-4600-9c41-8f333c8e76d6" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,8 +159,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Utilities/PawnVerbUtility.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="43" column="94" selection-start-line="43" selection-start-column="94" selection-end-line="43" selection-end-column="94" />
+            <state relative-caret-position="16">
+              <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
               <folding>
                 <marker date="1601358390295" expanded="false" signature="6:113" ph="..." />
                 <marker date="1601358390295" expanded="true" signature="139:5130" ph="{...}" />
@@ -404,12 +402,12 @@
       <workItem from="1586304507303" duration="3273000" />
       <workItem from="1591714390694" duration="473000" />
       <workItem from="1591828079531" duration="79000" />
-      <workItem from="1601357615719" duration="2118000" />
+      <workItem from="1601357615719" duration="2593000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12317000" />
+    <option name="totallyTimeSpent" value="12792000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1430,8 +1428,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Utilities/PawnVerbUtility.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="43" column="94" selection-start-line="43" selection-start-column="94" selection-end-line="43" selection-end-column="94" />
+        <state relative-caret-position="16">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
           <folding>
             <marker date="1601358390295" expanded="false" signature="6:113" ph="..." />
             <marker date="1601358390295" expanded="true" signature="139:5130" ph="{...}" />
