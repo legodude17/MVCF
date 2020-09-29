@@ -34,20 +34,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Base.cs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="10" column="12" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
-              <folding>
-                <marker date="1586306166192" expanded="true" signature="28:306" ph="{...}" />
-                <marker date="1586306166192" expanded="true" signature="58:304" ph="{...}" />
-                <marker date="1586306166192" expanded="true" signature="124:298" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Harmony/PawnAttackGizmoUtility_GetAttackGizmos.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="336">
@@ -70,7 +56,7 @@
         <entry file="file://$PROJECT_DIR$/Harmony/Verb_EquipmentSource.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="256">
-              <caret line="16" column="44" lean-forward="true" selection-start-line="16" selection-start-column="44" selection-end-line="16" selection-end-column="44" />
+              <caret line="16" column="44" selection-start-line="16" selection-start-column="44" selection-end-line="16" selection-end-column="44" />
               <folding>
                 <marker date="1586305550688" expanded="true" signature="6:70" ph="..." />
                 <marker date="1586305550688" expanded="true" signature="94:663" ph="{...}" />
@@ -130,11 +116,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Harmony/Verb_OrderForceTarget.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="80">
-              <caret line="6" column="38" lean-forward="true" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
+              <caret line="6" column="38" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
               <folding>
                 <marker date="1586306012372" expanded="false" signature="6:30" ph="..." />
                 <marker date="1586306012372" expanded="true" signature="54:777" ph="{...}" />
@@ -170,11 +156,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Utilities/PawnVerbUtility.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1584">
-              <caret line="104" column="16" selection-start-line="104" selection-start-column="16" selection-end-line="104" selection-end-column="16" />
+            <state relative-caret-position="315">
+              <caret line="43" column="94" lean-forward="true" selection-start-line="43" selection-start-column="94" selection-end-line="43" selection-end-column="94" />
               <folding>
                 <marker date="1601358390295" expanded="false" signature="6:113" ph="..." />
                 <marker date="1601358390295" expanded="true" signature="139:5130" ph="{...}" />
@@ -210,6 +196,21 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Comps/CompProperties_VerbGiver.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="64">
+              <caret line="5" column="41" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="41" />
+              <folding>
+                <marker date="1586305291894" expanded="false" signature="6:46" ph="..." />
+                <marker date="1586305291894" expanded="true" signature="68:253" ph="{...}" />
+                <marker date="1586305291894" expanded="true" signature="129:251" ph="{...}" />
+                <marker date="1586305291894" expanded="true" signature="177:245" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
@@ -219,6 +220,9 @@
       <find>defmod</find>
       <find>Log.Message</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Base.cs" root0="FORCE_HIGHLIGHTING" />
@@ -295,6 +299,7 @@
     <option name="width" value="1920" />
     <option name="height" value="1080" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="SolutionExplorer" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -311,19 +316,6 @@
               <item name="" type="784c90a0:SolutionExplorerRootNode" />
               <item name="MCVF" type="24d0babc:SolutionExplorerModelNode" />
               <item name="MCVF" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="MCVF" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="MCVF" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Harmony" type="24d0babc:SolutionExplorerModelNode" />
-            </path>
-            <path>
-              <item name="" type="784c90a0:SolutionExplorerRootNode" />
-              <item name="MCVF" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="MCVF" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Harmony" type="24d0babc:SolutionExplorerModelNode" />
-              <item name="Trackers" type="24d0babc:SolutionExplorerModelNode" />
             </path>
             <path>
               <item name="" type="784c90a0:SolutionExplorerRootNode" />
@@ -410,12 +402,12 @@
       <workItem from="1586304507303" duration="3273000" />
       <workItem from="1591714390694" duration="473000" />
       <workItem from="1591828079531" duration="79000" />
-      <workItem from="1601357615719" duration="780000" />
+      <workItem from="1601357615719" duration="1766000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10979000" />
+    <option name="totallyTimeSpent" value="11965000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -448,7 +440,7 @@
       <window_info anchor="bottom" id="Unit Tests" order="12" />
       <window_info anchor="bottom" id="Terminal" order="13" />
       <window_info anchor="bottom" id="Event Log" order="14" side_tool="true" />
-      <window_info anchor="bottom" id="Build" order="15" weight="0.32902467" />
+      <window_info anchor="bottom" id="Build" order="15" weight="0.32850242" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -681,19 +673,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="457">
           <caret line="119" column="54" selection-start-line="119" selection-start-column="54" selection-end-line="119" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Comps/CompProperties_VerbGiver.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="5" column="33" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
-          <folding>
-            <marker date="1586305291894" expanded="false" signature="6:46" ph="..." />
-            <marker date="1586305291894" expanded="true" signature="68:253" ph="{...}" />
-            <marker date="1586305291894" expanded="true" signature="129:251" ph="{...}" />
-            <marker date="1586305291894" expanded="true" signature="177:245" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1368,44 +1347,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Utilities/PawnVerbUtility.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1584">
-          <caret line="104" column="16" selection-start-line="104" selection-start-column="16" selection-end-line="104" selection-end-column="16" />
-          <folding>
-            <marker date="1601358390295" expanded="false" signature="6:113" ph="..." />
-            <marker date="1601358390295" expanded="true" signature="139:5130" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="181:5128" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="259:1947" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="365:629" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="447:615" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="510:597" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="731:1244" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="812:1230" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="1020:1212" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="1091:1190" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="1404:1937" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="1513:1923" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="1713:1905" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="1784:1883" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="2031:3358" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="2142:2655" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="2223:2641" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="2431:2623" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="2502:2601" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="2815:3348" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="2924:3334" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="3124:3316" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="3195:3294" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="3466:4107" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="3653:3998" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="4190:4543" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="4592:5122" ph="{...}" />
-            <marker date="1601358390295" expanded="true" signature="4628:5112" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Harmony/Pawn_TryGetAttackVerb.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="992">
@@ -1447,7 +1388,7 @@
     <entry file="file://$PROJECT_DIR$/Harmony/Verb_EquipmentSource.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
-          <caret line="16" column="44" lean-forward="true" selection-start-line="16" selection-start-column="44" selection-end-line="16" selection-end-column="44" />
+          <caret line="16" column="44" selection-start-line="16" selection-start-column="44" selection-end-line="16" selection-end-column="44" />
           <folding>
             <marker date="1586305550688" expanded="true" signature="6:70" ph="..." />
             <marker date="1586305550688" expanded="true" signature="94:663" ph="{...}" />
@@ -1461,13 +1402,64 @@
     <entry file="file://$PROJECT_DIR$/Harmony/Verb_OrderForceTarget.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="80">
-          <caret line="6" column="38" lean-forward="true" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
+          <caret line="6" column="38" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="38" />
           <folding>
             <marker date="1586306012372" expanded="false" signature="6:30" ph="..." />
             <marker date="1586306012372" expanded="true" signature="54:777" ph="{...}" />
             <marker date="1586306012372" expanded="true" signature="150:775" ph="{...}" />
             <marker date="1586306012372" expanded="true" signature="284:769" ph="{...}" />
             <marker date="1586306012372" expanded="true" signature="628:685" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Comps/CompProperties_VerbGiver.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="5" column="41" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="41" />
+          <folding>
+            <marker date="1586305291894" expanded="false" signature="6:46" ph="..." />
+            <marker date="1586305291894" expanded="true" signature="68:253" ph="{...}" />
+            <marker date="1586305291894" expanded="true" signature="129:251" ph="{...}" />
+            <marker date="1586305291894" expanded="true" signature="177:245" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Utilities/PawnVerbUtility.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="43" column="94" lean-forward="true" selection-start-line="43" selection-start-column="94" selection-end-line="43" selection-end-column="94" />
+          <folding>
+            <marker date="1601358390295" expanded="false" signature="6:113" ph="..." />
+            <marker date="1601358390295" expanded="true" signature="139:5130" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="181:5128" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="259:1947" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="365:629" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="447:615" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="510:597" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="731:1244" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="812:1230" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="1020:1212" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="1091:1190" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="1404:1937" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="1513:1923" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="1713:1905" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="1784:1883" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="2031:3358" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="2142:2655" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="2223:2641" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="2431:2623" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="2502:2601" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="2815:3348" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="2924:3334" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="3124:3316" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="3195:3294" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="3466:4107" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="3653:3998" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="4190:4543" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="4592:5122" ph="{...}" />
+            <marker date="1601358390295" expanded="true" signature="4628:5112" ph="{...}" />
           </folding>
         </state>
       </provider>
