@@ -1,5 +1,5 @@
 <Defs>
-  <ThingDef Name="ApparelArmorPowerBase" ParentName="ArmorMachineableBase" Abstract="True">
+  <ThingDef Name="MVCFApparelArmorPowerBase" ParentName="ArmorMachineableBase" Abstract="True">
     <techLevel>Spacer</techLevel>
     <recipeMaker>
       <unfinishedThingDef>UnfinishedTechArmor</unfinishedThingDef>
@@ -71,7 +71,7 @@
     </thingSetMakerTags>
   </ThingDef>
 
-  <ThingDef ParentName="ApparelArmorPowerBase">
+  <ThingDef ParentName="MVCFApparelArmorPowerBase">
     <defName>PurgeArmour</defName>
     <label>Purge Armor</label>
     <description>A suit of extremely heavy powered armour. An insane investment, this set of power armour is so armoured, that it has the capabilities of stopping tank rounds. Allows the wearer to weild heavy items, but increases physic sensitivity immensely.</description>
