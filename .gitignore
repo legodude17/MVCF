@@ -1,2 +1,4 @@
 /Assemblies
-/Source/MVCF/.idea
+/Source/MVCF/.idea/**
+/Source/MVCF/obj/**
+/Source/MVCF/bin/**

@@ -1,7 +1,0 @@
-/Users/joshuab/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods/Assemblies/MCVF.dll
-/Users/joshuab/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods/Assemblies/MCVF.pdb
-/Users/joshuab/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods/MVCF/Source/MCVF/obj/Debug/MCVF.csprojAssemblyReference.cache
-/Users/joshuab/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods/MVCF/Source/MCVF/obj/Debug/MCVF.dll
-/Users/joshuab/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods/MVCF/Source/MCVF/obj/Debug/MCVF.pdb
-/Users/joshuab/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods/MVCF/Assemblies/MCVF.dll
-/Users/joshuab/Library/Application Support/Steam/steamapps/common/RimWorld/RimWorldMac.app/Mods/MVCF/Assemblies/MCVF.pdb
