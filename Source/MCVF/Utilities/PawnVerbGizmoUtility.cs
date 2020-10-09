@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MCVF.Comps;
 using RimWorld;
+using UnityEngine;
 using Verse;
 
 namespace MCVF.Utilities
@@ -44,6 +45,11 @@ namespace MCVF.Utilities
                 default:
                     Log.Error("Unexpected owner in GetGizmoForVerb!");
                     break;
+            }
+
+            if (verb.UIIcon != null)
+            {
+                gizmo.icon = verb.UIIcon;
             }
 
             gizmo.tutorTag = "VerbTarget";

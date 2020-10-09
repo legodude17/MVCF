@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+
+<!-- ====================  ==================== -->
+<!-- ============= Example Patches ============ -->
+<!-- === In order to see these patches work === -->
+<!-- == in-game, you must move this document == -->
+<!-- ============ to root/Patches. ============ -->
+<!-- ====================  ==================== -->
+
+<Patch>
+	<Operation Class="PatchOperationSequence">
+		<success>Normal</success>
+		<operations>
+			<!-- == This patch adds the revolver's ranged = -->
+			<!-- ==== verb to the ThingDef that defines === -->
+			<!-- ================= humans ================= -->
+			<li Class="PatchOperationAdd">
+				<xpath>/Defs/ThingDef[defName = "Warg"]</xpath>
+				<value>
+					<verbs>
+						<li>
+							<!-- == Values that would normally be defined = -->
+							<!-- ==== in <statBases /> must instead be ==== -->
+							<!-- ======= defined inside of the verb. ====== -->
+							<verbClass>Verb_Shoot</verbClass>
+							<label>bio-shot</label>
+							<accuracyTouch>0.80</accuracyTouch>
+							<accuracyShort>0.75</accuracyShort>
+							<accuracyMedium>0.45</accuracyMedium>
+							<accuracyLong>0.35</accuracyLong>
+							<hasStandardCommand>true</hasStandardCommand>
+							<defaultProjectile>Bullet_Revolver</defaultProjectile>
+							<defaultCooldownTime>1.6</defaultCooldownTime>
+							<warmupTime>0.3</warmupTime>
+							<range>25.9</range>
+							<soundCast>Shot_Revolver</soundCast>
+							<soundCastTail>GunTail_Light</soundCastTail>
+							<muzzleFlashScale>9</muzzleFlashScale>
+						</li>
+					</verbs>
+				</value>
+			</li>
+		</operations>
+	</Operation>
+</Patch>

@@ -13,8 +13,8 @@ namespace MCVF.Harmony
         public static bool Prefix(ref Verb __result, Pawn __instance, Thing target, bool allowManualCastWeapons = false)
         {
             var storage = WorldComponent_ExtendedPawnStorage.GetStorage().GetStorageFor(__instance);
-            //Log.Message("Getting attack verb for " + __instance + " with currentVerb " + storage.currentVerb?.Label() +
-            //            " and target " + target);
+//            Log.Message("Getting attack verb for " + __instance + " with currentVerb " + storage.currentVerb?.Label() +
+//                        " and target " + target);
 
             if (target == null)
             {
@@ -34,7 +34,7 @@ namespace MCVF.Harmony
             }
 
             var verbsToUse = verbs.ToList();
-            if (!verbsToUse.Any())
+            if (verbsToUse.Count == 0)
             {
                 return true;
             }

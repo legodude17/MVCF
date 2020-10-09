@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using MCVF.Utilities;
 using RimWorld;
 using Verse;
 
@@ -101,6 +103,15 @@ namespace MCVF.Comps
                 verb.Notify_PickedUp();
                 verb.caster = null;
             }
+        }
+
+        public override IEnumerable<Gizmo> CompGetWornGizmosExtra()
+        {
+            foreach (var gizmo in base.CompGetWornGizmosExtra())
+                yield return gizmo;
+
+            foreach (var verb in verbTracker.AllVerbs)
+                yield return verb.GetGizmoForVerb();
         }
     }
 }

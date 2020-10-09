@@ -16,24 +16,18 @@ namespace MCVF.Harmony
             {
                 yield return gizmo;
             }
-
-            var verbs = pawn.AllRangedVerbsPawnNoEquipment().ToList();
             
-//            Log.Message("Found " + verbs.Count + " verbs");
-
-            if (!verbs.Any())
-            {
-                yield break;
-            }
-
-            foreach (var verb in verbs)
-            {
-                yield return verb.GetGizmoForVerb();
-            }
-
-            if (verbs.Count() + pawn.equipment.GetGizmos().Count() >= 2)
+            if (pawn.AllRangedVerbsPawnNoEquipment().Count() + pawn.equipment.GetGizmos().Count() >= 2)
             {
                 yield return pawn.GetMainAttackGizmoForPawn();
+            }
+
+            foreach (var verb in pawn.AllRangedVerbsPawnNoEquipmentNoApparel())
+            {
+                if (verb.verbProps.hasStandardCommand)
+                {
+                    yield return verb.GetGizmoForVerb();
+                }
             }
         }
     }
