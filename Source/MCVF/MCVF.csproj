@@ -54,7 +54,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Harmony\AttackTargetFInder_BestAttackTarget.cs" />
     <Compile Include="Harmony\Trackers\Trackers.cs">
       <DependentUpon>
       </DependentUpon>

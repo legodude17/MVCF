@@ -38,13 +38,13 @@ namespace MCVF.Harmony
         }
     }
 
-    [HarmonyPatch]
+//    [HarmonyPatch]
     public class DebugVoid
     {
         public static IEnumerable<MethodBase> TargetMethods()
         {
             yield return AccessTools.Method(typeof(Pawn), "TryStartAttack");
-//            yield return AccessTools.Method(typeof(Verb_LaunchProjectile), "WarmupComplete");
+            yield return AccessTools.Method(typeof(Verb_LaunchProjectile), "WarmupComplete");
         }
 
         public static void Prefix(MethodBase __originalMethod, object __instance)

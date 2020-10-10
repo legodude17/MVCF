@@ -40,13 +40,13 @@ namespace MCVF
             var verb = pawn.TryGetAttackVerb(enemyTarget, !pawn.IsColonist);
             if (verb == null) return null;
             if (verb.IsMeleeAttack) return null;
-            Log.Message("Found target " + enemyTarget + " and verb " + verb);
+//            Log.Message("Found target " + enemyTarget + " and verb " + verb);
             var positionIsStandable = pawn.Position.Standable(pawn.Map);
             var canHitEnemy = verb.CanHitTarget(enemyTarget);
             var enemyNear = (pawn.Position - enemyTarget.Position).LengthHorizontalSquared < 25;
             if ((positionIsStandable || enemyNear) && canHitEnemy)
             {
-                Log.Message("Shooting at target");
+//                Log.Message("Shooting at target");
                 return new Job(JobDefOf.Wait_Combat, ExpiryIntervalShooterSucceeded.RandomInRange, true)
                 {
                     canUseRangedWeapon = true
@@ -66,14 +66,14 @@ namespace MCVF
             
             if (position == pawn.Position)
             {
-                Log.Message("Shooting at target");
+//                Log.Message("Shooting at target");
                 return new Job(JobDefOf.Wait_Combat, ExpiryIntervalShooterSucceeded.RandomInRange, true)
                 {
                     canUseRangedWeapon = true
                 };
             }
             
-            Log.Message("Moving to new shooting position");
+//            Log.Message("Moving to new shooting position");
             return new Job(JobDefOf.Goto, position)
             {
                 expiryInterval = ExpiryIntervalShooterSucceeded.RandomInRange,
