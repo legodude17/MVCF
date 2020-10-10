@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Harmony\AttackTargetFInder_BestAttackTarget.cs" />
     <Compile Include="Harmony\Trackers\Trackers.cs">
       <DependentUpon>
       </DependentUpon>
@@ -74,6 +75,7 @@
     <Compile Include="Harmony/Verb_OrderForceTarget.cs" />
     <Compile Include="Harmony/VerbTracker_CreateVerbTargetCommand.cs" />
     <Compile Include="Harmony/Verb_EquipmentSource.cs" />
+    <Compile Include="Harmony/JobDriver_Wait_CheckForAutoAttack.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

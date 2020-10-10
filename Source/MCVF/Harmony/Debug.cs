@@ -38,16 +38,13 @@ namespace MCVF.Harmony
         }
     }
 
-//    [HarmonyPatch]
+    [HarmonyPatch]
     public class DebugVoid
     {
         public static IEnumerable<MethodBase> TargetMethods()
         {
-            yield return AccessTools.Method(typeof(Verb), "WarmupComplete");
-            yield return AccessTools.Method(typeof(Verb), "TryCastNextBurstShot");
-            yield return AccessTools.Method(typeof(Verb_Shoot), "TryCastShot");
-            yield return AccessTools.Method(typeof(Stance_Busy), "Expire");
-            yield return AccessTools.Constructor(typeof(Stance_Busy));
+            yield return AccessTools.Method(typeof(Pawn), "TryStartAttack");
+//            yield return AccessTools.Method(typeof(Verb_LaunchProjectile), "WarmupComplete");
         }
 
         public static void Prefix(MethodBase __originalMethod, object __instance)
@@ -60,6 +57,11 @@ namespace MCVF.Harmony
                 Log.Message("        Caster: " + verb.caster);
                 Log.Message("        State: " + verb.state);
             }
+
+            if (__instance is Verb_LaunchProjectile proj)
+            {
+                Log.Message("        Projectile: " + proj.Projectile.label);
+            }
         }
 
         public static void Postfix(MethodBase __originalMethod, object __instance)
@@ -68,7 +70,7 @@ namespace MCVF.Harmony
         }
     }
 
-   // [HarmonyPatch(typeof(PlayLogEntryUtility), "RulesForOptionalWeapon")]
+//   [HarmonyPatch(typeof(PlayLogEntryUtility), "RulesForOptionalWeapon")]
     public class Debug
     {
         public static void Prefix(string prefix,

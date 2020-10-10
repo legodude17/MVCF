@@ -16,6 +16,7 @@ namespace MCVF.Harmony
 //            Log.Message("Getting attack verb for " + __instance + " with currentVerb " + storage.currentVerb?.Label() +
 //                        " and target " + target);
 
+
             if (target == null)
             {
                 storage.currentVerb = null;
@@ -58,9 +59,10 @@ namespace MCVF.Harmony
             return false;
         }
 
-        public static void Postfix(ref Verb __result)
+        public static void Postfix(ref Verb __result, Pawn __instance, Thing target)
         {
-            //Log.Message("TryGetAttackVerb returning " + __result?.Label());
+//            if (target == null) return;
+//            Log.Message("TryGetAttackVerb returning " + __result?.Label() + " for " + __instance?.LabelShort + " and target " + target.LabelShort);
         }
     }
 }

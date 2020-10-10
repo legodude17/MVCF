@@ -17,7 +17,10 @@ namespace MCVF.Harmony
                     __result = giver.parent;
                     break;
                 case HediffComp_VerbGiver giver2:
-//                    __result = giver2.Pawn;
+                    __result = giver2.Pawn;
+                    break;
+                case Pawn pawn:
+                    __result = pawn;
                     break;
             }
         }

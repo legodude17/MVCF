@@ -6,20 +6,13 @@ using Verse.AI;
 
 namespace MCVF
 {
-    public class JobGiver_ManhunterRanged : JobGiver_Manhunter
+    public class JobGiver_ManhunterRanged : ThinkNode_JobGiver
     {
         private static readonly IntRange ExpiryIntervalShooterSucceeded = new IntRange(450, 550);
 
         private const float TargetKeepRadius = 65f;
-
-        JobGiver_ManhunterRanged()
-        {
-            
-        }
-
         protected override Job TryGiveJob(Pawn pawn)
         {
-            Log.Message("In JobGiver_ManhunterRanged");
             var enemyTarget = pawn.mindState.enemyTarget;
             if (enemyTarget != null && (enemyTarget.Destroyed || Find.TickManager.TicksGame - pawn.mindState.lastEngageTargetTick > 400 || !pawn.CanReach(enemyTarget, PathEndMode.Touch, Danger.Deadly) || (float)(pawn.Position - enemyTarget.Position).LengthHorizontalSquared > TargetKeepRadius * TargetKeepRadius || ((IAttackTarget)enemyTarget).ThreatDisabled(pawn)))
             {
@@ -40,22 +33,24 @@ namespace MCVF
                 }
             }
             
-            Log.Message("Found target: " + enemyTarget);
-            
             pawn.mindState.enemyTarget = enemyTarget;
 
             if (enemyTarget == null) return null;
 
             var verb = pawn.TryGetAttackVerb(enemyTarget, !pawn.IsColonist);
-            Log.Message("Found verb: " + verb);
             if (verb == null) return null;
             if (verb.IsMeleeAttack) return null;
+            Log.Message("Found target " + enemyTarget + " and verb " + verb);
             var positionIsStandable = pawn.Position.Standable(pawn.Map);
             var canHitEnemy = verb.CanHitTarget(enemyTarget);
             var enemyNear = (pawn.Position - enemyTarget.Position).LengthHorizontalSquared < 25;
             if ((positionIsStandable || enemyNear) && canHitEnemy)
             {
-                return new Job(JobDefOf.Wait_Combat, ExpiryIntervalShooterSucceeded.RandomInRange, true);
+                Log.Message("Shooting at target");
+                return new Job(JobDefOf.Wait_Combat, ExpiryIntervalShooterSucceeded.RandomInRange, true)
+                {
+                    canUseRangedWeapon = true
+                };
             }
 
             if (!CastPositionFinder.TryFindCastPosition(new CastPositionRequest()
@@ -71,9 +66,14 @@ namespace MCVF
             
             if (position == pawn.Position)
             {
-                return new Job(JobDefOf.Wait_Combat, ExpiryIntervalShooterSucceeded.RandomInRange, true);
+                Log.Message("Shooting at target");
+                return new Job(JobDefOf.Wait_Combat, ExpiryIntervalShooterSucceeded.RandomInRange, true)
+                {
+                    canUseRangedWeapon = true
+                };
             }
             
+            Log.Message("Moving to new shooting position");
             return new Job(JobDefOf.Goto, position)
             {
                 expiryInterval = ExpiryIntervalShooterSucceeded.RandomInRange,
