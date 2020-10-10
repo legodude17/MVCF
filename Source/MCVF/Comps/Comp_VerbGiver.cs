@@ -8,7 +8,7 @@ namespace MCVF.Comps
 {
     public class Comp_VerbGiver : ThingComp, IVerbOwner
     {
-        public VerbTracker verbTracker;
+        private VerbTracker verbTracker;
 
         public CompProperties_VerbGiver Props => (CompProperties_VerbGiver) props;
 
@@ -35,21 +35,10 @@ namespace MCVF.Comps
                 return;
             if (verbTracker == null)
                 verbTracker = new VerbTracker(this);
+            if (!(parent?.holdingOwner?.Owner is Pawn_ApparelTracker tracker)) return;
             foreach (var verb in verbTracker.AllVerbs)
             {
-                var tracker = parent.holdingOwner.Owner;
-                switch (tracker)
-                {
-                    case Pawn_ApparelTracker ap:
-                        verb.caster = ap.pawn;
-                        break;
-                    case Pawn_InventoryTracker inv:
-                        verb.caster = inv.pawn;
-                        break;
-                    default:
-                        Log.Error("Invalid owner owner on Comp_VerbGiver");
-                        break;
-                }
+                verb.caster = tracker.pawn;
             }
         }
 

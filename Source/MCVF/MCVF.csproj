@@ -54,8 +54,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Harmony\Brawlers.cs" />
     <Compile Include="Harmony\Pawn_DraftController_GetGizmos.cs" />
-    <Compile Include="Harmony\Trackers\Trackers.cs">
+    <Compile Include="Harmony\Trackers.cs">
       <DependentUpon>
       </DependentUpon>
     </Compile>

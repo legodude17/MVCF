@@ -3,7 +3,7 @@ using MCVF.Comps;
 using RimWorld;
 using Verse;
 
-namespace MCVF.Harmony.Trackers
+namespace MCVF.Harmony
 {
     [HarmonyPatch(typeof(Pawn_ApparelTracker), "Notify_ApparelAdded")]
     public class Pawn_ApparelTracker_Notify_ApparelAdded
