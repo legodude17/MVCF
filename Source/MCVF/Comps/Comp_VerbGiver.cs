@@ -76,24 +76,6 @@ namespace MCVF.Comps
             }
         }
 
-        public void Notify_PickedUp(Pawn pawn)
-        {
-            foreach (var verb in verbTracker.AllVerbs)
-            {
-                verb.caster = pawn;
-                verb.Notify_PickedUp();
-            }
-        }
-
-        public void Notify_Dropped()
-        {
-            foreach (var verb in verbTracker.AllVerbs)
-            {
-                verb.Notify_PickedUp();
-                verb.caster = null;
-            }
-        }
-
         public override IEnumerable<Gizmo> CompGetWornGizmosExtra()
         {
             foreach (var gizmo in base.CompGetWornGizmosExtra())

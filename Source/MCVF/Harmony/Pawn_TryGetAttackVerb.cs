@@ -19,16 +19,16 @@ namespace MCVF.Harmony
 
             if (target == null)
             {
-                storage.currentVerb = null;
+                storage.CurrentVerb = null;
             }
 
-            if (storage.currentVerb != null)
+            if (storage.CurrentVerb != null)
             {
-                __result = storage.currentVerb;
+                __result = storage.CurrentVerb;
                 return false;
             }
 
-            var verbs = __instance.AllRangedVerbsPawn();
+            var verbs = storage.Manager.AllRangedVerbs;
             if (!allowManualCastWeapons)
             {
                 verbs = verbs.Where(v => !v.verbProps.onlyManualCast);

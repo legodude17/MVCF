@@ -30,7 +30,7 @@ namespace MCVF
         {
             ExtendedPawnStorage store;
             if (storage.TryGetValue(pawn, out store)) return store;
-            store = new ExtendedPawnStorage();
+            store = new ExtendedPawnStorage(pawn);
             storage.Add(pawn, store);
             return store;
         }

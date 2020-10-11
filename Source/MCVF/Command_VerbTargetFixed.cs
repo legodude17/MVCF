@@ -9,7 +9,7 @@ namespace MCVF
         {
             var storage = WorldComponent_ExtendedPawnStorage.GetStorage().GetStorageFor(verb.CasterPawn);
 //            Log.Message("setting currentVerb to " + verb.Label());
-            storage.currentVerb = verb;
+            storage.CurrentVerb = verb;
             base.ProcessInput(ev);
         }
 

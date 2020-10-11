@@ -82,7 +82,7 @@ namespace MCVF.Utilities
                 Find.Targeter.BeginTargeting(TargetingParameters.ForAttackAny(), target =>
                 {
                     var storage = WorldComponent_ExtendedPawnStorage.GetStorage().GetStorageFor(pawn);
-                    storage.currentVerb = null;
+                    storage.CurrentVerb = null;
                     var verb = pawn.BestVerbForTarget(target, verbs);
                     verb.OrderForceTarget(target);
                 }, pawn, null, TexCommand.Attack);

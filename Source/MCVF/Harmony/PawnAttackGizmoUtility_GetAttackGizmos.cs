@@ -10,6 +10,7 @@ namespace MCVF.Harmony
     [HarmonyPatch(typeof(PawnAttackGizmoUtility), "GetAttackGizmos")]
     public class PawnAttackGizmoUtility_GetAttackGizmos
     {
+        // ReSharper disable once InconsistentNaming
         public static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> __result, Pawn pawn)
         {
             foreach (var gizmo in __result)
@@ -17,7 +18,7 @@ namespace MCVF.Harmony
                 yield return gizmo;
             }
             
-            if (pawn.AllRangedVerbsPawnNoEquipment().Count() + pawn.equipment.GetGizmos().Count() >= 2)
+            if (pawn.AllRangedVerbsPawn().Count() >= 2)
             {
                 yield return pawn.GetMainAttackGizmoForPawn();
             }
