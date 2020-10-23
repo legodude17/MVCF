@@ -6,3 +6,6 @@ Patches/RaceVerb.xml
 log.txt
 .vscode
 _PublisherPlus.xml
+.idea
+obj
+bin
