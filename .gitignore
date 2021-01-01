@@ -1,7 +1,7 @@
 /Assemblies
-Textures
-Sounds
-Patches/RaceVerb.xml
+/Textures
+/Sounds
+/Patches/RaceVerb.xml
 /Defs
 log.txt
 .vscode
@@ -9,3 +9,6 @@ _PublisherPlus.xml
 .idea
 obj
 bin
+*.user
+.vs
+.VSCodeCounter

@@ -85,6 +85,7 @@
     <verbs>
       <li>
         <verbClass>Verb_Shoot</verbClass>
+        <label>flamethrower</label>
         <hasStandardCommand>true</hasStandardCommand>
         <defaultProjectile>Bullet_PurgeFlamer</defaultProjectile>
         <warmupTime>2.5</warmupTime>
@@ -103,6 +104,7 @@
       </li>
       <li>
         <verbClass>Verb_Shoot</verbClass>
+        <label>railgun</label>
         <hasStandardCommand>true</hasStandardCommand>
         <defaultProjectile>Bullet_PurgeRailgun</defaultProjectile>
         <warmupTime>3.0</warmupTime>
@@ -119,6 +121,7 @@
       </li>
       <li>
         <verbClass>Verb_Shoot</verbClass>
+        <label>gun</label>
         <hasStandardCommand>true</hasStandardCommand>
         <defaultProjectile>Bullet_PurgeRifle</defaultProjectile>
         <warmupTime>1.0</warmupTime>
@@ -137,7 +140,22 @@
       </li>
     </verbs>
     <comps>
-      <li Class="MCVF.Comps.CompProperties_VerbGiver" />
+      <li Class="MVCF.Comps.CompProperties_VerbGiver">
+        <verbProps>
+          <li>
+            <label>flamethrower</label>
+            <canBeToggled>true</canBeToggled>
+          </li>
+          <li>
+            <label>railgun</label>
+            <canBeToggled>true</canBeToggled>
+          </li>
+          <li>
+            <label>gun</label>
+            <canBeToggled>true</canBeToggled>
+          </li>
+        </verbProps>
+      </li>
     </comps>
   </ThingDef>
   <ThingDef ParentName="BaseBullet">

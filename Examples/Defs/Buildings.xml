@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <ThingDef ParentName="BuildingBase">
+        <defName>QuinVulcanCannon</defName>
+        <label>quintuple vulcan cannon</label>
+        <thingClass>MVCF.Building_MultiTurret</thingClass>
+        <graphicData>
+            <texPath>VulcanCannon</texPath>
+            <graphicClass>Graphic_Multi</graphicClass>
+            <drawSize>(5,5)</drawSize>
+        </graphicData>
+        <altitudeLayer>Building</altitudeLayer>
+        <stealable>false</stealable>
+        <statBases>
+            <MaxHitPoints>500</MaxHitPoints>
+            <Flammability>1.0</Flammability>
+            <WorkToBuild>8000</WorkToBuild>
+            <Mass>450</Mass>
+            <Beauty>-90</Beauty>
+        </statBases>
+        <tickerType>Normal</tickerType>
+        <comps>
+            <li Class="CompProperties_Explosive">
+                <explosiveRadius>5.1</explosiveRadius>
+                <explosiveDamageType>Bomb</explosiveDamageType>
+                <chanceNeverExplodeFromDamage>0.5</chanceNeverExplodeFromDamage>
+            </li>
+            <li Class="CompProperties_Forbiddable" />
+            <li Class="CompProperties_Power">
+                <compClass>CompPowerTrader</compClass>
+                <basePowerConsumption>600</basePowerConsumption>
+            </li>
+            <li Class="CompProperties_Glower">
+                <glowRadius>12</glowRadius>
+                <glowColor>(260,0,0,0)</glowColor>
+            </li>
+            <li Class="CompProperties_Flickable" />
+            <li Class="CompProperties_Refuelable">
+                <fuelLabel>Shots until rearm</fuelLabel>
+                <fuelGizmoLabel>Barrel durability</fuelGizmoLabel>
+                <fuelFilter>
+                    <thingDefs>
+                        <li>Steel</li>
+                    </thingDefs>
+                </fuelFilter>
+                <fuelCapacity>800</fuelCapacity>
+                <initialFuelPercent>1</initialFuelPercent>
+                <autoRefuelPercent>0.75</autoRefuelPercent>
+                <showFuelGizmo>true</showFuelGizmo>
+                <minimumFueledThreshold>1</minimumFueledThreshold>
+                <fuelMultiplier>3.75</fuelMultiplier>
+                <factorByDifficulty>true</factorByDifficulty>
+                <consumeFuelOnlyWhenUsed>true</consumeFuelOnlyWhenUsed>
+                <outOfFuelMessage>Cannot shoot: Needs rearm</outOfFuelMessage>
+                <fuelIconPath>UI/Overlays/Barrel</fuelIconPath>
+            </li>
+        </comps>
+        <description>Fortified minigun tower with five miniguns that fire continuously, very durable but power hungry. Its tall and has long range, but due to that it can't aim under itself and can't be placed indoors. Explodes in a radius of 5.1 when destroyed.</description>
+        <size>(3,3)</size>
+        <passability>Impassable</passability>
+        <castEdgeShadows>true</castEdgeShadows>
+        <fillPercent>0.9</fillPercent>
+        <stuffCategories>
+            <li>Metallic</li>
+            <li>Stony</li>
+        </stuffCategories>
+        <costStuffCount>600</costStuffCount>
+        <costList>
+            <Steel>500</Steel>
+            <ComponentIndustrial>15</ComponentIndustrial>
+        </costList>
+        <terrainAffordanceNeeded>Light</terrainAffordanceNeeded>
+        <designationCategory>Security</designationCategory>
+        <specialDisplayRadius>36</specialDisplayRadius>
+        <constructionSkillPrerequisite>8</constructionSkillPrerequisite>
+        <building>
+            <ai_combatDangerous>true</ai_combatDangerous>
+            <turretGunDef>Gun_VulcanCannon</turretGunDef>
+            <turretBurstCooldownTime>0.1</turretBurstCooldownTime>
+        </building>
+        <rotatable>true</rotatable>
+        <placeWorkers>
+            <li>PlaceWorker_NotUnderRoof</li>
+            <li>PlaceWorker_TurretTop</li>
+            <li>PlaceWorker_ShowTurretRadius</li>
+        </placeWorkers>
+        <researchPrerequisites>
+            <li>HeavyTurrets</li>
+        </researchPrerequisites>
+        <modExtensions>
+            <li Class="MVCF.DefModExtension_MultiTurret">
+                <turrets>
+                    <li>
+                        <gunDef>Gun_VulcanCannon</gunDef>
+                        <burstCooldownTime>0.1</burstCooldownTime>
+                        <offset>(1.0, 1.0)</offset>
+                        <scale>0.5</scale>
+                    </li>
+                    <li>
+                        <gunDef>Gun_VulcanCannon</gunDef>
+                        <burstCooldownTime>0.1</burstCooldownTime>
+                        <offset>(-1.0, 1.0)</offset>
+                        <scale>0.5</scale>
+                    </li>
+                    <li>
+                        <gunDef>Gun_VulcanCannon</gunDef>
+                        <burstCooldownTime>0.1</burstCooldownTime>
+                        <offset>(1.0, -1.0)</offset>
+                        <scale>0.5</scale>
+                    </li>
+                    <li>
+                        <gunDef>Gun_VulcanCannon</gunDef>
+                        <burstCooldownTime>0.1</burstCooldownTime>
+                        <offset>(-1.0, -1.0)</offset>
+                        <scale>0.5</scale>
+                    </li>
+                </turrets>
+            </li>
+        </modExtensions>
+    </ThingDef>
+
+    <ThingDef ParentName="BaseBullet">
+        <defName>Bullet_VulcanCannon</defName>
+        <label>vulcan cannon bullet</label>
+        <graphicData>
+            <texPath>Things/Projectile/Bullet_Big</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <projectile>
+            <damageDef>Bullet</damageDef>
+            <flyOverhead>false</flyOverhead>
+            <damageAmountBase>6</damageAmountBase>
+            <speed>100</speed>
+        </projectile>
+    </ThingDef>
+
+    <ThingDef ParentName="BaseWeaponTurret">
+        <defName>Gun_VulcanCannon</defName>
+        <label>vulcan cannon gun</label>
+        <graphicData>
+            <texPath>VulcanCannonGun</texPath>
+            <graphicClass>Graphic_Single</graphicClass>
+        </graphicData>
+        <description>Carefully crafted gun attached to a turret.</description>
+        <soundInteract>Interact_Rifle</soundInteract>
+        <statBases>
+            <Mass>40</Mass>
+            <AccuracyTouch>0.85</AccuracyTouch>
+            <AccuracyShort>0.65</AccuracyShort>
+            <AccuracyMedium>0.45</AccuracyMedium>
+            <AccuracyLong>0.25</AccuracyLong>
+            <RangedWeapon_Cooldown>4.20</RangedWeapon_Cooldown>
+        </statBases>
+        <verbs>
+            <li>
+                <verbClass>Verb_Shoot</verbClass>
+                <hasStandardCommand>true</hasStandardCommand>
+                <defaultProjectile>Bullet_VulcanCannon</defaultProjectile>
+                <warmupTime>5.3</warmupTime>
+                <range>46.0</range>
+                <minRange>6</minRange>
+                <ticksBetweenBurstShots>6</ticksBetweenBurstShots>
+                <burstShotCount>1</burstShotCount>
+                <soundCast>Shot_Minigun</soundCast>
+                <soundCastTail>GunTail_Heavy</soundCastTail>
+                <muzzleFlashScale>6</muzzleFlashScale>
+                <consumeFuelPerShot>1</consumeFuelPerShot>
+            </li>
+        </verbs>
+    </ThingDef>
+</Defs>

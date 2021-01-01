@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-<!-- Currently broken, need custom Verb_Jump class
+  <!-- Currently broken, need custom Verb_Jump class
   <HediffDef ParentName="AddedBodyPartBase">
     <defName>RocketFoot</defName>
     <label>rocket foot</label>
@@ -40,49 +40,48 @@
       <betterThanNatural>true</betterThanNatural>
     </addedPartProps>
   </HediffDef>
-
-  <ThingDef ParentName="BodyPartArchotechBase">
-    <defName>RocketFoot</defName>
-    <label>rocket foot</label>
-    <description>A rocket engine mounted in the foot that enables one to jump somewhere.</description>
-    <descriptionHyperlinks>
-      <RecipeDef>InstallRocketFoot</RecipeDef>
-    </descriptionHyperlinks>
-    <statBases>
-      <MarketValue>2800</MarketValue>
-      <Mass>0.3</Mass>
-    </statBases>
-  </ThingDef>
-
-  <RecipeDef ParentName="SurgeryInstallBodyPartArtificialBase">
-    <defName>InstallRocketFoot</defName>
-    <label>install rocket foot</label>
-    <description>Install a rocket foot.</description>
-    <descriptionHyperlinks>
-      <ThingDef>RocketFoot</ThingDef>
-      <HediffDef>RocketFoot</HediffDef>
-    </descriptionHyperlinks>
-    <jobString>Installing rocket foot.</jobString>
-    <ingredients>
-      <li>
-        <filter>
-          <thingDefs>
-            <li>RocketFoot</li>
-          </thingDefs>
-        </filter>
-        <count>1</count>
-      </li>
-    </ingredients>
-    <fixedIngredientFilter>
-      <thingDefs>
-        <li>RocketFoot</li>
-      </thingDefs>
-    </fixedIngredientFilter>
-    <appliedOnFixedBodyParts>
-      <li>Foot</li>
-    </appliedOnFixedBodyParts>
-    <addsHediff>RocketFoot</addsHediff>
-  </RecipeDef>
    -->
-
+  <HediffDef ParentName="ImplantHediffBase">
+    <defName>TorsoMinigun</defName>
+    <label>mounted minigun</label>
+    <labelNoun>a mounted minigun</labelNoun>
+    <description>A minigun mounted to the torso.</description>
+    <comps>
+      <li Class="MVCF.Comps.HediffCompProperties_ExtendedVerbGiver">
+        <verbs>
+          <li>
+            <verbClass>Verb_Shoot</verbClass>
+            <label>minigun</label>
+            <hasStandardCommand>true</hasStandardCommand>
+            <defaultProjectile>Bullet_Minigun</defaultProjectile>
+            <warmupTime>2.5</warmupTime>
+            <range>30.9</range>
+            <burstShotCount>25</burstShotCount>
+            <ticksBetweenBurstShots>5</ticksBetweenBurstShots>
+            <soundCast>Shot_Minigun</soundCast>
+            <soundCastTail>GunTail_Medium</soundCastTail>
+            <muzzleFlashScale>9</muzzleFlashScale>
+            <commandIcon>Things/Item/Equipment/WeaponRanged/Minigun</commandIcon>
+          </li>
+        </verbs>
+        <verbProps>
+          <li>
+            <label>minigun</label>
+            <draw>true</draw>
+            <canBeToggled>true</canBeToggled>
+            <graphic>
+              <texPath>Things/Item/Equipment/WeaponRanged/Minigun</texPath>
+              <graphicClass>Graphic_Single</graphicClass>
+            </graphic>
+            <canFireIndependently>true</canFireIndependently>
+          </li>
+        </verbProps>
+      </li>
+    </comps>
+    <addedPartProps>
+      <solid>true</solid>
+      <partEfficiency>1.50</partEfficiency>
+      <betterThanNatural>true</betterThanNatural>
+    </addedPartProps>
+  </HediffDef>
 </Defs>
