@@ -1,68 +1,58 @@
 using System.Linq;
 using HarmonyLib;
-using MCVF.Utilities;
+using MVCF.Utilities;
 using Verse;
 
 // ReSharper disable InconsistentNaming
 
-namespace MCVF.Harmony
+namespace MVCF.Harmony
 {
     [HarmonyPatch(typeof(Pawn), "TryGetAttackVerb")]
     public class Pawn_TryGetAttackVerb
     {
         public static bool Prefix(ref Verb __result, Pawn __instance, Thing target, bool allowManualCastWeapons = false)
         {
-            var storage = WorldComponent_ExtendedPawnStorage.GetStorage().GetStorageFor(__instance);
-//            Log.Message("Getting attack verb for " + __instance + " with currentVerb " + storage.currentVerb?.Label() +
-//                        " and target " + target);
+            var manager = __instance.Manager();
+            // Log.Message("Getting attack verb for " + __instance + " with currentVerb " + manager.CurrentVerb?.Label() +
+            //             " and target " + target + " and searchVerb " + manager.SearchVerb?.Label());
 
 
-            if (target == null)
+            if (target == null) manager.CurrentVerb = null;
+
+            if (manager.CurrentVerb != null)
             {
-                storage.CurrentVerb = null;
-            }
-
-            if (storage.CurrentVerb != null)
-            {
-                __result = storage.CurrentVerb;
+                __result = manager.CurrentVerb;
                 return false;
             }
 
-            var verbs = storage.Manager.AllRangedVerbs;
-            if (!allowManualCastWeapons)
+            if (target == null)
             {
-                verbs = verbs.Where(v => !v.verbProps.onlyManualCast);
+                __result = manager.SearchVerb;
+                if (__result == null) __result = manager.LongestRangedVerb.Verb;
+
+                return false;
             }
+
+            var verbs = manager.ManagedVerbs.Where(v =>
+                !v.Verb.IsMeleeAttack && (v.Props == null || !v.Props.canFireIndependently));
+            if (!allowManualCastWeapons) verbs = verbs.Where(v => !v.Verb.verbProps.onlyManualCast);
 
             var verbsToUse = verbs.ToList();
-            if (verbsToUse.Count == 0)
-            {
-                return true;
-            }
-
-            if (target == null)
-            {
-                var maxRange = verbsToUse.Max(verb => verb.verbProps.range);
-                __result = verbsToUse.FirstOrDefault(verb => verb.verbProps.range >= maxRange);
-                return false;
-            }
+            if (verbsToUse.Count == 0) return true;
 
             var verbToUse = __instance.BestVerbForTarget(target, verbsToUse);
 
-            if (verbToUse == null)
-            {
-                return true;
-            }
+            if (verbToUse == null) return true;
 
             __result = verbToUse;
 
             return false;
         }
 
-        public static void Postfix(ref Verb __result, Pawn __instance, Thing target)
-        {
-//            if (target == null) return;
-//            Log.Message("TryGetAttackVerb returning " + __result?.Label() + " for " + __instance?.LabelShort + " and target " + target.LabelShort);
-        }
+        // public static void Postfix(ref Verb __result, Pawn __instance, Thing target)
+        // {
+        //     Log.Message("TryGetAttackVerb returning " + __result?.Label() + " for " + __instance?.LabelShort +
+        //                 " and target " + target?.LabelShort);
+        // }
     }
 }

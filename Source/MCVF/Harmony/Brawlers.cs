@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using MCVF.Comps;
-using MCVF.Utilities;
+using MVCF.Comps;
+using MVCF.Utilities;
 using RimWorld;
-using RimWorld.Planet;
 using UnityEngine;
 using Verse;
 
-namespace MCVF.Harmony
+namespace MVCF.Harmony
 {
     [HarmonyPatch(typeof(Alert_BrawlerHasRangedWeapon), "GetReport")]
     public class Alert_BrawlerHasRangedWeapon_GetReport
@@ -19,10 +18,8 @@ namespace MCVF.Harmony
         {
             var brawlersWithNonEquipmentRanged = new List<Pawn>();
             foreach (var pawn in PawnsFinder.AllMaps_FreeColonistsSpawned)
-            {
                 if (pawn.story.traits.HasTrait(TraitDefOf.Brawler) && pawn.AllRangedVerbsPawn().Any())
                     brawlersWithNonEquipmentRanged.Add(pawn);
-            }
 
             __result = AlertReport.CulpritsAre(brawlersWithNonEquipmentRanged);
 
@@ -62,7 +59,7 @@ namespace MCVF.Harmony
             var comp = hediff.CompPropsFor(typeof(HediffComp_VerbGiver)) as HediffCompProperties_VerbGiver;
             var verbs = comp?.verbs;
             if (verbs == null) return;
-            if (!verbs.Any((verb) => !verb.IsMeleeAttack)) return;
+            if (!verbs.Any(verb => !verb.IsMeleeAttack)) return;
 //            Log.Message("Hediff adds ranged verbs");
             __result.Label = __result.Label + " " + "EquipWarningBrawler".Translate();
         }
@@ -83,10 +80,7 @@ namespace MCVF.Harmony
             if (apparel == null) return;
 //            Log.Message("Found apparel: " + apparel.Label);
             var str = "ForceWear";
-            if (apparel.def.apparel.LastLayer.IsUtilityLayer)
-            {
-                str = "ForceEquipApparel";
-            }
+            if (apparel.def.apparel.LastLayer.IsUtilityLayer) str = "ForceEquipApparel";
             var comp = apparel.TryGetComp<Comp_VerbGiver>();
             if (comp == null) return;
 //            Log.Message("Found comp");
@@ -99,14 +93,10 @@ namespace MCVF.Harmony
 //            Log.Message("Pawn is brawler");
 //            Log.Message("Looking for: " + str.Translate((NamedArgument) apparel.LabelShort, (NamedArgument) apparel));
             foreach (var opt in opts)
-            {
-//                Log.Message("  Found: " + opt.Label);
+                //                Log.Message("  Found: " + opt.Label);
                 if (opt.Label.Contains(str.Translate((NamedArgument) apparel.LabelShort, (NamedArgument) apparel)))
-                {
-//                    Log.Message("Adding to label");
+                    //                    Log.Message("Adding to label");
                     opt.Label += " " + "EquipWarningBrawler".Translate();
-                }
-            }
         }
     }
 }

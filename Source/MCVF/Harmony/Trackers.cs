@@ -1,11 +1,10 @@
-using System.Reflection;
 using HarmonyLib;
-using MCVF.Comps;
-using MCVF.Utilities;
+using MVCF.Comps;
+using MVCF.Utilities;
 using RimWorld;
 using Verse;
 
-namespace MCVF.Harmony
+namespace MVCF.Harmony
 {
     [HarmonyPatch(typeof(Pawn_ApparelTracker), "Notify_ApparelAdded")]
     public class Pawn_ApparelTracker_Notify_ApparelAdded
@@ -16,15 +15,13 @@ namespace MCVF.Harmony
             var comp = apparel.TryGetComp<Comp_VerbGiver>();
             if (comp == null) return;
             comp.Notify_Worn(__instance.pawn);
-            var manager = __instance.pawn?.StorageFor()?.Manager;
+            var manager = __instance.pawn?.Manager();
             if (manager == null) return;
             foreach (var verb in comp.VerbTracker.AllVerbs)
-            {
-                manager.AddVerb(verb, VerbSource.Apparel);
-            }
+                manager.AddVerb(verb, VerbSource.Apparel, comp.PropsFor(verb));
         }
     }
-    
+
     [HarmonyPatch(typeof(Pawn_ApparelTracker), "Notify_ApparelRemoved")]
     public class Pawn_ApparelTracker_Notify_ApparelRemoved
     {
@@ -34,30 +31,27 @@ namespace MCVF.Harmony
             var comp = apparel.TryGetComp<Comp_VerbGiver>();
             if (comp == null) return;
             comp.Notify_Unworn();
-            var manager = __instance.pawn?.StorageFor()?.Manager;
+            var manager = __instance.pawn?.Manager();
             if (manager == null) return;
-            foreach (var verb in comp.VerbTracker.AllVerbs)
-            {
-                manager.RemoveVerb(verb);
-            }
+            foreach (var verb in comp.VerbTracker.AllVerbs) manager.RemoveVerb(verb);
         }
     }
 
-    [HarmonyPatch(typeof(Pawn_HealthTracker), "AddHediff", typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo), typeof(DamageWorker.DamageResult))]
+    [HarmonyPatch(typeof(Pawn_HealthTracker), "AddHediff", typeof(Hediff), typeof(BodyPartRecord), typeof(DamageInfo),
+        typeof(DamageWorker.DamageResult))]
     public class Pawn_HealthTracker_AddHediff
     {
-       // ReSharper disable once InconsistentNaming
+        // ReSharper disable once InconsistentNaming
         public static void Postfix(Hediff hediff, Pawn_HealthTracker __instance)
         {
             var comp = hediff.TryGetComp<HediffComp_VerbGiver>();
             if (comp == null) return;
             var pawn = __instance.hediffSet.pawn;
-            var manager = pawn?.StorageFor()?.Manager;
+            var manager = pawn?.Manager();
             if (manager == null) return;
+            var extComp = comp as HediffComp_ExtendedVerbGiver;
             foreach (var verb in comp.VerbTracker.AllVerbs)
-            {
-                manager.AddVerb(verb, VerbSource.Hediff);
-            }
+                manager.AddVerb(verb, VerbSource.Hediff, extComp?.PropsFor(verb));
         }
     }
 
@@ -70,12 +64,9 @@ namespace MCVF.Harmony
             var comp = hediff.TryGetComp<HediffComp_VerbGiver>();
             if (comp == null) return;
             var pawn = __instance.hediffSet.pawn;
-            var manager = pawn?.StorageFor()?.Manager;
+            var manager = pawn?.Manager();
             if (manager == null) return;
-            foreach (var verb in comp.VerbTracker.AllVerbs)
-            {
-                manager.RemoveVerb(verb);
-            }
+            foreach (var verb in comp.VerbTracker.AllVerbs) manager.RemoveVerb(verb);
         }
     }
 
@@ -86,16 +77,24 @@ namespace MCVF.Harmony
         public static void Postfix(ThingWithComps eq, Pawn_EquipmentTracker __instance)
         {
             var comp = eq.TryGetComp<CompEquippable>();
-            if (comp == null) return;
-            var manager = __instance.pawn?.StorageFor()?.Manager;
-            if (manager == null) return;
-            foreach (var verb in comp.VerbTracker.AllVerbs)
+            if (comp == null)
             {
-                manager.AddVerb(verb, VerbSource.Equipment);
+                var extComp = eq.TryGetComp<Comp_VerbGiver>();
+                if (extComp == null) return;
+                var manager = __instance.pawn?.Manager();
+                if (manager == null) return;
+                foreach (var verb in extComp.VerbTracker.AllVerbs)
+                    manager.AddVerb(verb, VerbSource.Equipment, extComp.PropsFor(verb));
+            }
+            else
+            {
+                var manager = __instance.pawn?.Manager();
+                if (manager == null) return;
+                foreach (var verb in comp.VerbTracker.AllVerbs) manager.AddVerb(verb, VerbSource.Equipment, null);
             }
         }
     }
-    
+
     [HarmonyPatch(typeof(Pawn_EquipmentTracker), "Notify_EquipmentRemoved")]
     public class Pawn_EquipmentTracker_Notify_EquipmentRemoved
     {
@@ -104,12 +103,9 @@ namespace MCVF.Harmony
         {
             var comp = eq.TryGetComp<CompEquippable>();
             if (comp == null) return;
-            var manager = __instance.pawn?.StorageFor()?.Manager;
+            var manager = __instance.pawn?.Manager();
             if (manager == null) return;
-            foreach (var verb in comp.VerbTracker.AllVerbs)
-            {
-                manager.RemoveVerb(verb);
-            }
+            foreach (var verb in comp.VerbTracker.AllVerbs) manager.RemoveVerb(verb);
         }
     }
 }

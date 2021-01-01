@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using MCVF.Utilities;
+using MVCF.Utilities;
 using Verse;
 
 // ReSharper disable InconsistentNaming
 
-namespace MCVF.Harmony
+namespace MVCF.Harmony
 {
 //    [HarmonyPatch]
     public class DebugBool
     {
         public static IEnumerable<MethodBase> TargetMethods()
         {
-            yield return AccessTools.Method(typeof(Verb), "TryStartCastOn", new []{typeof(LocalTargetInfo), typeof(LocalTargetInfo), typeof(bool), typeof(bool)});
+            yield return AccessTools.Method(typeof(Verb), "TryStartCastOn",
+                new[] {typeof(LocalTargetInfo), typeof(LocalTargetInfo), typeof(bool), typeof(bool)});
             yield return AccessTools.Method(typeof(Verb_Shoot), "TryCastShot");
             yield return AccessTools.Method(typeof(Verb), "CanHitTarget");
             yield return AccessTools.Method(typeof(Verb), "TryFindShootLineFromTo");
@@ -58,10 +59,7 @@ namespace MCVF.Harmony
                 Log.Message("        State: " + verb.state);
             }
 
-            if (__instance is Verb_LaunchProjectile proj)
-            {
-                Log.Message("        Projectile: " + proj.Projectile.label);
-            }
+            if (__instance is Verb_LaunchProjectile proj) Log.Message("        Projectile: " + proj.Projectile.label);
         }
 
         public static void Postfix(MethodBase __originalMethod, object __instance)
@@ -77,7 +75,8 @@ namespace MCVF.Harmony
             ThingDef weaponDef,
             ThingDef projectileDef)
         {
-            Log.Message("RulesForOptionalWeapon: " + prefix + ", " + weaponDef?.defName + ", " + projectileDef?.defName);
+            Log.Message("RulesForOptionalWeapon: " + prefix + ", " + weaponDef?.defName + ", " +
+                        projectileDef?.defName);
         }
     }
 }
