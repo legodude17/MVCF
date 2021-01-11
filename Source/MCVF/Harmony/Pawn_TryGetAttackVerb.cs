@@ -46,10 +46,10 @@ namespace MVCF.Harmony
             return false;
         }
 
-        public static void Postfix(ref Verb __result, Pawn __instance, Thing target)
-        {
-            Log.Message("TryGetAttackVerb returning " + __result?.Label() + " for " + __instance?.LabelShort +
-                        " and target " + target?.LabelShort);
-        }
+        // public static void Postfix(ref Verb __result, Pawn __instance, Thing target)
+        // {
+        //     Log.Message("TryGetAttackVerb returning " + __result?.Label() + " for " + __instance?.LabelShort +
+        //                 " and target " + target?.LabelShort);
+        // }
     }
 }

@@ -13,17 +13,15 @@
 		<success>Normal</success>
 		<operations>
 			<!-- == This patch adds the revolver's ranged = -->
-			<!-- ==== verb to the ThingDef that defines === -->
-			<!-- ================= humans ================= -->
+			<!-- ==== verb to the ThingDef  === -->
 			<li Class="PatchOperationAdd">
-				<xpath>/Defs/ThingDef[defName = "Warg"]</xpath>
+				<xpath>/Defs/ThingDef[@Name = "AnimalThingBase"]</xpath>
 				<value>
 					<verbs>
-						<li>
-							<!-- == Values that would normally be defined = -->
-							<!-- ==== in <statBases /> must instead be ==== -->
-							<!-- ======= defined inside of the verb. ====== -->
-							<verbClass>Verb_Shoot</verbClass>
+						<!-- == Values that would normally be defined = -->
+						<!-- ==== in <statBases /> must instead be ==== -->
+						<!-- ======= defined inside of the verb. ====== -->
+						<!--<li> <verbClass>Verb_Shoot</verbClass>
 							<label>bio-shot</label>
 							<accuracyTouch>0.80</accuracyTouch>
 							<accuracyShort>0.75</accuracyShort>
@@ -36,7 +34,37 @@
 							<range>25.9</range>
 							<soundCast>Shot_Revolver</soundCast>
 							<soundCastTail>GunTail_Light</soundCastTail>
-							<muzzleFlashScale>9</muzzleFlashScale>
+							<muzzleFlashScale>9</muzzleFlashScale> </li>-->
+						<li>
+							<verbClass>Verb_Shoot</verbClass>
+							<accuracyTouch>1</accuracyTouch>
+							<accuracyShort>1</accuracyShort>
+							<accuracyMedium>0</accuracyMedium>
+							<accuracyLong>0</accuracyLong>
+							<hasStandardCommand>true</hasStandardCommand>
+							<defaultProjectile>Bullet_PurgeRifle</defaultProjectile>
+							<warmupTime>1</warmupTime>
+							<burstShotCount>1</burstShotCount>
+							<minRange>1</minRange>
+							<range>20</range>
+							<label>short range</label>
+							<muzzleFlashScale>0</muzzleFlashScale>
+						</li>
+
+						<li>
+							<verbClass>Verb_Shoot</verbClass>
+							<accuracyTouch>0</accuracyTouch>
+							<accuracyShort>0</accuracyShort>
+							<accuracyMedium>1</accuracyMedium>
+							<accuracyLong>1</accuracyLong>
+							<hasStandardCommand>true</hasStandardCommand>
+							<defaultProjectile>Bullet_PurgeRailgun</defaultProjectile>
+							<warmupTime>1</warmupTime>
+							<burstShotCount>1</burstShotCount>
+							<minRange>20</minRange>
+							<range>30</range>
+							<label>long range</label>
+							<muzzleFlashScale>0</muzzleFlashScale>
 						</li>
 					</verbs>
 				</value>

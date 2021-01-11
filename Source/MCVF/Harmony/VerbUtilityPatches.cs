@@ -12,6 +12,7 @@ namespace MVCF.Harmony
         [HarmonyPrefix]
         public static bool IsEMP_Prefix(Verb verb, ref bool __result)
         {
+            if (verb.verbProps.label == null) return true;
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
@@ -23,6 +24,7 @@ namespace MVCF.Harmony
         [HarmonyPrefix]
         public static bool IsIncendiary_Prefix(Verb verb, ref bool __result)
         {
+            if (verb.verbProps.label == null) return true;
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
@@ -34,6 +36,7 @@ namespace MVCF.Harmony
         [HarmonyPrefix]
         public static bool UsesExplosiveProjectiles_Prefix(Verb verb, ref bool __result)
         {
+            if (verb.verbProps.label == null) return true;
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
@@ -45,6 +48,7 @@ namespace MVCF.Harmony
         [HarmonyPrefix]
         public static bool ProjectileFliesOverhead_Prefix(Verb verb, ref bool __result)
         {
+            if (verb.verbProps.label == null) return true;
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
@@ -56,6 +60,7 @@ namespace MVCF.Harmony
         [HarmonyPrefix]
         public static bool HarmsHealth_Prefix(Verb verb, ref bool __result)
         {
+            if (verb.verbProps.label == null) return true;
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();

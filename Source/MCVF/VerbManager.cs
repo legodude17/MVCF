@@ -156,6 +156,18 @@ namespace MVCF
                 SearchVerb.verbProps.range = AllVerbs.Select(v => v.verbProps.range).Max();
             if (verb.verbProps.minRange <= SearchVerb.verbProps.minRange)
                 SearchVerb.verbProps.minRange = AllVerbs.Select(v => v.verbProps.minRange).Min();
+            SearchVerb.verbProps.targetParams = new TargetingParameters
+            {
+                canTargetAnimals = AllVerbs.Any(v => v.targetParams.canTargetAnimals),
+                canTargetBuildings = AllVerbs.Any(v => v.targetParams.canTargetBuildings),
+                canTargetPawns = AllVerbs.Any(v => v.targetParams.canTargetPawns),
+                canTargetFires = AllVerbs.Any(v => v.targetParams.canTargetFires),
+                canTargetHumans = AllVerbs.Any(v => v.targetParams.canTargetHumans),
+                canTargetItems = AllVerbs.Any(v => v.targetParams.canTargetItems),
+                canTargetLocations = AllVerbs.Any(v => v.targetParams.canTargetLocations),
+                canTargetMechs = AllVerbs.Any(v => v.targetParams.canTargetMechs),
+                canTargetSelf = AllVerbs.Any(v => v.targetParams.canTargetSelf)
+            };
         }
 
         public void DrawAt(Vector3 drawPos)
@@ -270,16 +282,12 @@ namespace MVCF
             // Log.Message("  currentTarget: " + currentTarget);
             Verb.VerbTick();
             if (Verb.Bursting) return;
-            if (cooldownTicksLeft > 0)
-            {
-                cooldownTicksLeft--;
-                Log.Message("Cooling down");
-            }
+            if (cooldownTicksLeft > 0) cooldownTicksLeft--;
 
             if (cooldownTicksLeft > 0) return;
             if (!currentTarget.IsValid || currentTarget.HasThing && currentTarget.ThingDestroyed)
             {
-                Log.Message("Attempting to find a target");
+                // Log.Message("Attempting to find a target");
                 var man = pawn.Manager();
                 var sv = man.SearchVerb;
                 man.SearchVerb = Verb;
@@ -291,17 +299,17 @@ namespace MVCF
             }
             else if (warmUpTicksLeft == 0)
             {
-                Log.Message("Starting cast!");
+                // Log.Message("Starting cast!");
                 TryCast();
             }
             else if (warmUpTicksLeft > 0)
             {
-                Log.Message("Still warming up");
+                // Log.Message("Still warming up");
                 warmUpTicksLeft--;
             }
             else
             {
-                Log.Message("Firing again");
+                // Log.Message("Firing again");
                 TryStartCast();
             }
         }
@@ -318,7 +326,7 @@ namespace MVCF
         private void TryCast()
         {
             warmUpTicksLeft = -1;
-            Log.Message(Verb.TryStartCastOn(currentTarget) ? "Firing!" : "Failed to fire :(");
+            Verb.TryStartCastOn(currentTarget);
         }
 
         public override LocalTargetInfo PointingTarget(Pawn p)

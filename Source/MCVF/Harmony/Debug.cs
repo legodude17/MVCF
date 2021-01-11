@@ -68,21 +68,12 @@ namespace MVCF.Harmony
         }
     }
 
-    [HarmonyPatch(typeof(Verb_LaunchProjectile), "get_Projectile")]
+    // [HarmonyPatch(typeof(Verb_LaunchProjectile), "get_Projectile")]
     public class Debug
     {
         public static void Prefix(Verb __instance)
         {
             Log.Message("get_Projectile: " + __instance?.Label());
-        }
-    }
-
-    [HarmonyPatch(typeof(Verb), "get_EquipmentSource")]
-    public class Debug2
-    {
-        public static void Prefix(Verb __instance)
-        {
-            Log.Message("get_EquipmentSource: " + __instance?.Label());
         }
     }
 }

@@ -80,7 +80,6 @@ namespace MVCF.Harmony
         public static void BattleLogEntry_RangedFire_Constructor_Prefix(ref Thing initiator, ThingDef weaponDef)
         {
             if (initiator is IFakeCaster fc) initiator = fc.RealCaster();
-            Log.Message("RangedFire with weaponDef " + weaponDef?.defName);
         }
 
         [HarmonyPatch(typeof(BattleLogEntry_RangedImpact), MethodType.Constructor, typeof(Thing), typeof(Thing),
