@@ -8,7 +8,18 @@ namespace MVCF.Utilities
     {
         public static VerbManager Manager(this Pawn p)
         {
-            return WorldComponent_MVCF.GetStorage().GetManagerFor(p);
+            return Base.Prepatcher ? PrepatchedVerbManager(p) : WorldComponent_MVCF.GetStorage().GetManagerFor(p);
+        }
+
+        public static VerbManager PrepatchedVerbManager(Pawn p)
+        {
+            if (p.MVCF_VerbManager == null)
+            {
+                p.MVCF_VerbManager = new VerbManager();
+                p.MVCF_VerbManager.Initialize(p);
+            }
+
+            return p.MVCF_VerbManager;
         }
 
         public static IEnumerable<Verb> AllRangedVerbsPawn(this Pawn p)
