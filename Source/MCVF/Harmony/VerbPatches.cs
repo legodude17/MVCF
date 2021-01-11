@@ -39,6 +39,9 @@ namespace MVCF.Harmony
                 case Pawn pawn:
                     __result = pawn;
                     break;
+                case VerbManager vm:
+                    __result = vm.Pawn;
+                    break;
             }
         }
     }

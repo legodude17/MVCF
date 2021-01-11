@@ -68,15 +68,21 @@ namespace MVCF.Harmony
         }
     }
 
-//   [HarmonyPatch(typeof(PlayLogEntryUtility), "RulesForOptionalWeapon")]
+    [HarmonyPatch(typeof(Verb_LaunchProjectile), "get_Projectile")]
     public class Debug
     {
-        public static void Prefix(string prefix,
-            ThingDef weaponDef,
-            ThingDef projectileDef)
+        public static void Prefix(Verb __instance)
         {
-            Log.Message("RulesForOptionalWeapon: " + prefix + ", " + weaponDef?.defName + ", " +
-                        projectileDef?.defName);
+            Log.Message("get_Projectile: " + __instance?.Label());
+        }
+    }
+
+    [HarmonyPatch(typeof(Verb), "get_EquipmentSource")]
+    public class Debug2
+    {
+        public static void Prefix(Verb __instance)
+        {
+            Log.Message("get_EquipmentSource: " + __instance?.Label());
         }
     }
 }

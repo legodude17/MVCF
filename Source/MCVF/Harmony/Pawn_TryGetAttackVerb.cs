@@ -16,10 +16,9 @@ namespace MVCF.Harmony
             // Log.Message("Getting attack verb for " + __instance + " with currentVerb " + manager.CurrentVerb?.Label() +
             //             " and target " + target + " and searchVerb " + manager.SearchVerb?.Label());
 
-
             if (target == null) manager.CurrentVerb = null;
 
-            if (manager.CurrentVerb != null)
+            if (manager.CurrentVerb != null && manager.CurrentVerb.CanHitTarget(target))
             {
                 __result = manager.CurrentVerb;
                 return false;
@@ -28,8 +27,6 @@ namespace MVCF.Harmony
             if (target == null)
             {
                 __result = manager.SearchVerb;
-                if (__result == null) __result = manager.LongestRangedVerb.Verb;
-
                 return false;
             }
 
@@ -49,10 +46,10 @@ namespace MVCF.Harmony
             return false;
         }
 
-        // public static void Postfix(ref Verb __result, Pawn __instance, Thing target)
-        // {
-        //     Log.Message("TryGetAttackVerb returning " + __result?.Label() + " for " + __instance?.LabelShort +
-        //                 " and target " + target?.LabelShort);
-        // }
+        public static void Postfix(ref Verb __result, Pawn __instance, Thing target)
+        {
+            Log.Message("TryGetAttackVerb returning " + __result?.Label() + " for " + __instance?.LabelShort +
+                        " and target " + target?.LabelShort);
+        }
     }
 }

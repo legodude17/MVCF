@@ -10,15 +10,13 @@ using Verse.AI;
 
 namespace MVCF
 {
-    public class VerbManager
+    public class VerbManager : IVerbOwner
     {
         private readonly List<ManagedVerb> drawVerbs = new List<ManagedVerb>();
         private readonly List<TurretVerb> tickVerbs = new List<TurretVerb>();
         private readonly List<ManagedVerb> verbs = new List<ManagedVerb>();
         public Verb CurrentVerb;
-        private Pawn pawn;
-        public Verb SearchVerb;
-        public ManagedVerb LongestRangedVerb { get; private set; }
+        public Verb SearchVerb = new Verb_LaunchProjectileStatic();
 
         public IEnumerable<Verb> AllVerbs => verbs.Select(mv => mv.Verb);
         public IEnumerable<Verb> AllRangedVerbs => verbs.Select(mv => mv.Verb).Where(verb => !verb.IsMeleeAttack);
@@ -31,9 +29,42 @@ namespace MVCF
         public IEnumerable<Verb> AllRangedVerbsNoEquipmentNoApparel => verbs
             .Where(mv => mv.Source != VerbSource.Equipment && mv.Source != VerbSource.Apparel).Select(mv => mv.Verb);
 
+        public Pawn Pawn { get; private set; }
+
+        public string UniqueVerbOwnerID()
+        {
+            return "VerbManager_" + (Pawn as IVerbOwner).UniqueVerbOwnerID();
+        }
+
+        public bool VerbsStillUsableBy(Pawn p)
+        {
+            return p == Pawn;
+        }
+
+        public VerbTracker VerbTracker { get; private set; }
+
+        public List<VerbProperties> VerbProperties => new List<VerbProperties>
+        {
+            new VerbProperties
+            {
+                range = 0,
+                minRange = 9999,
+                targetParams = new TargetingParameters(),
+                ai_IsWeapon = true,
+                verbClass = typeof(Verb_Shoot),
+                label = Base.SearchLabel
+            }
+        };
+
+        public List<Tool> Tools => new List<Tool>();
+        public ImplementOwnerTypeDef ImplementOwnerTypeDef => ImplementOwnerTypeDefOf.NativeVerb;
+        public Thing ConstantCaster => Pawn;
+
         public void Initialize(Pawn pawn)
         {
-            this.pawn = pawn;
+            Pawn = pawn;
+            VerbTracker = new VerbTracker(this);
+            SearchVerb = VerbTracker.PrimaryVerb;
             foreach (var verb in pawn.VerbTracker.AllVerbs)
                 AddVerb(verb, VerbSource.RaceDef, pawn.TryGetComp<Comp_VerbGiver>()?.PropsFor(verb));
             if (pawn?.health?.hediffSet?.hediffs != null)
@@ -94,28 +125,42 @@ namespace MVCF
 
             verbs.Add(mv);
             if (props != null && props.draw) drawVerbs.Add(mv);
-            if (LongestRangedVerb == null || verb.verbProps.range > LongestRangedVerb.Verb.verbProps.range)
-                LongestRangedVerb = mv;
+
+            if (verb.verbProps.range > SearchVerb.verbProps.range) SearchVerb.verbProps.range = verb.verbProps.range;
+            if (verb.verbProps.minRange < SearchVerb.verbProps.minRange)
+                SearchVerb.verbProps.minRange = verb.verbProps.minRange;
+            SearchVerb.verbProps.targetParams = new TargetingParameters
+            {
+                canTargetAnimals = AllVerbs.Any(v => v.targetParams.canTargetAnimals),
+                canTargetBuildings = AllVerbs.Any(v => v.targetParams.canTargetBuildings),
+                canTargetPawns = AllVerbs.Any(v => v.targetParams.canTargetPawns),
+                canTargetFires = AllVerbs.Any(v => v.targetParams.canTargetFires),
+                canTargetHumans = AllVerbs.Any(v => v.targetParams.canTargetHumans),
+                canTargetItems = AllVerbs.Any(v => v.targetParams.canTargetItems),
+                canTargetLocations = AllVerbs.Any(v => v.targetParams.canTargetLocations),
+                canTargetMechs = AllVerbs.Any(v => v.targetParams.canTargetMechs),
+                canTargetSelf = AllVerbs.Any(v => v.targetParams.canTargetSelf)
+            };
         }
 
         public void RemoveVerb(Verb verb)
         {
             var mv = verbs.Find(m => m.Verb == verb);
-            if (LongestRangedVerb == mv)
-            {
-                var maxRange = verbs.Select(v => v.Verb.verbProps.range).Max();
-                LongestRangedVerb = verbs.First(v => v.Verb.verbProps.range >= maxRange);
-            }
 
             verbs.Remove(mv);
             if (drawVerbs.Contains(mv)) drawVerbs.Remove(mv);
             var idx = tickVerbs.FindIndex(tv => tv.Verb == verb);
             if (idx >= 0) tickVerbs.RemoveAt(idx);
+
+            if (verb.verbProps.range >= SearchVerb.verbProps.range)
+                SearchVerb.verbProps.range = AllVerbs.Select(v => v.verbProps.range).Max();
+            if (verb.verbProps.minRange <= SearchVerb.verbProps.minRange)
+                SearchVerb.verbProps.minRange = AllVerbs.Select(v => v.verbProps.minRange).Min();
         }
 
         public void DrawAt(Vector3 drawPos)
         {
-            foreach (var mv in drawVerbs) mv.DrawOn(pawn, drawPos);
+            foreach (var mv in drawVerbs) mv.DrawOn(Pawn, drawPos);
         }
 
         public void Tick()
@@ -236,11 +281,12 @@ namespace MVCF
             {
                 Log.Message("Attempting to find a target");
                 var man = pawn.Manager();
+                var sv = man.SearchVerb;
                 man.SearchVerb = Verb;
                 currentTarget = (LocalTargetInfo) (Thing) AttackTargetFinder.BestShootTargetFromCurrentPosition(pawn,
                     TargetScanFlags.NeedActiveThreat | TargetScanFlags.NeedLOSToAll |
                     TargetScanFlags.NeedAutoTargetable);
-                man.SearchVerb = null;
+                man.SearchVerb = sv;
                 TryStartCast();
             }
             else if (warmUpTicksLeft == 0)
