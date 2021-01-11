@@ -56,13 +56,13 @@ namespace MVCF
                 {
                     canUseRangedWeapon = true
                 };
-
             if (!CastPositionFinder.TryFindCastPosition(new CastPositionRequest
             {
                 caster = pawn,
                 verb = verb,
                 maxRangeFromTarget = verb.verbProps.range,
-                wantCoverFromTarget = false
+                wantCoverFromTarget = false,
+                target = enemyTarget
             }, out var position))
                 return null;
 
