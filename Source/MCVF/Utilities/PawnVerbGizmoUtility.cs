@@ -69,20 +69,22 @@ namespace MVCF.Utilities
 
         public static Gizmo GetMainAttackGizmoForPawn(this Pawn pawn)
         {
-            var gizmo = new Command_Action();
             var verbs = pawn.Manager().ManagedVerbs;
-            gizmo.defaultDesc = "Attack";
-            gizmo.hotKey = KeyBindingDefOf.Misc1;
-            gizmo.icon = TexCommand.SquadAttack;
-            gizmo.action = () =>
+            var gizmo = new Command_Action
             {
-                Find.Targeter.BeginTargeting(TargetingParameters.ForAttackAny(), target =>
+                defaultDesc = "Attack",
+                hotKey = KeyBindingDefOf.Misc1,
+                icon = TexCommand.SquadAttack,
+                action = () =>
                 {
-                    var manager = pawn.Manager();
-                    manager.CurrentVerb = null;
-                    var verb = pawn.BestVerbForTarget(target, verbs);
-                    verb.OrderForceTarget(target);
-                }, pawn, null, TexCommand.Attack);
+                    Find.Targeter.BeginTargeting(TargetingParameters.ForAttackAny(), target =>
+                    {
+                        var manager = pawn.Manager();
+                        manager.CurrentVerb = null;
+                        var verb = pawn.BestVerbForTarget(target, verbs);
+                        verb.OrderForceTarget(target);
+                    }, pawn, null, TexCommand.Attack);
+                }
             };
 
             if (pawn.Faction != Faction.OfPlayer)
