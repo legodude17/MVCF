@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 using HarmonyLib;
 using MVCF.Utilities;
 using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using Verse.Grammar;
 
 namespace MVCF.Harmony
 {
@@ -31,7 +30,6 @@ namespace MVCF.Harmony
             if (currentEffectiveVerb.IsIncendiary())
                 flags |= TargetScanFlags.NeedNonBurning;
             var thing = (Thing) AttackTargetFinder.BestShootTargetFromCurrentPosition(__instance.pawn, flags);
-//            Log.Message("Found target for auto attack: " + thing?.Label);
             if (thing == null)
                 return;
             __instance.pawn.TryStartAttack((LocalTargetInfo) thing);
@@ -42,44 +40,52 @@ namespace MVCF.Harmony
         [HarmonyPostfix]
         public static void Postfix_Pawn_DrawAt(Pawn __instance, Vector3 drawLoc, bool flip = false)
         {
-            __instance.Manager().DrawAt(drawLoc);
+            __instance.Manager(false)?.DrawAt(drawLoc);
         }
 
-        [HarmonyPatch(typeof(Pawn), "Tick")]
+        [HarmonyPatch(typeof(Pawn), "SpawnSetup")]
         [HarmonyPostfix]
-        public static void Postfix_Pawn_Tick(Pawn __instance)
+        public static void Postfix_Pawn_SpawnSetup(Pawn __instance)
         {
-            __instance.Manager().Tick();
+            var man = __instance.Manager();
+            if (man == null) return;
+            if (man.NeedsTicking)
+                WorldComponent_MVCF.GetComp().TickManagers.Add(new System.WeakReference<VerbManager>(man));
         }
 
-        [HarmonyPatch(typeof(VerbTracker), "CreateVerbTargetCommand")]
-        [HarmonyTranspiler]
-        // ReSharper disable once IdentifierTypo
-        public static IEnumerable<CodeInstruction> Transpile_CreateVerbTargetCommand(
-            IEnumerable<CodeInstruction> instructions)
+        [HarmonyPatch(typeof(Pawn), "DeSpawn")]
+        [HarmonyPostfix]
+        public static void Postfix_Pawn_DeSpawn(Pawn __instance)
         {
-            Log.Message("CreateVerbTargetCommandTranspiler");
-            foreach (var instruction in instructions)
-            {
-                if (instruction.opcode == OpCodes.Newobj)
+            var man = __instance.Manager(false);
+            if (man == null) return;
+            if (man.NeedsTicking)
+                WorldComponent_MVCF.GetComp().TickManagers.RemoveAll(wr =>
                 {
-                    Log.Message("operand: " + instruction.operand);
-                    if (instruction.operand is Type type)
-                        if (type == typeof(Command_VerbTarget))
-                            instruction.operand = typeof(Command_VerbTargetFixed);
-                }
-
-
-                yield return instruction;
-            }
+                    if (!wr.TryGetTarget(out var vm)) return true;
+                    return vm == man;
+                });
         }
 
         [HarmonyPatch(typeof(BattleLogEntry_RangedFire), MethodType.Constructor, typeof(Thing), typeof(Thing),
             typeof(ThingDef), typeof(ThingDef), typeof(bool))]
         [HarmonyPrefix]
-        public static void BattleLogEntry_RangedFire_Constructor_Prefix(ref Thing initiator, ThingDef weaponDef)
+        public static void BattleLogEntry_RangedFire_Constructor_Prefix(ref Thing initiator, Thing target,
+            ref ThingDef weaponDef, ThingDef projectileDef)
         {
             if (initiator is IFakeCaster fc) initiator = fc.RealCaster();
+        }
+
+        [HarmonyPatch(typeof(PlayLogEntryUtility), "RulesForOptionalWeapon")]
+        [HarmonyPostfix]
+        public static IEnumerable<Rule> PlayLogEntryUtility_RulesForOptionalWeapon_Postfix(IEnumerable<Rule> __result,
+            string prefix, ThingDef weaponDef, ThingDef projectileDef)
+        {
+            foreach (var rule in __result) yield return rule;
+            if (weaponDef != null || projectileDef == null) yield break;
+
+            foreach (var rule in GrammarUtility.RulesForDef(prefix + "_projectile", projectileDef))
+                yield return rule;
         }
 
         [HarmonyPatch(typeof(BattleLogEntry_RangedImpact), MethodType.Constructor, typeof(Thing), typeof(Thing),

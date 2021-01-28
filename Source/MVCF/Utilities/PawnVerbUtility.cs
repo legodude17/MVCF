@@ -6,14 +6,16 @@ namespace MVCF.Utilities
 {
     public static class PawnVerbUtility
     {
-        public static VerbManager Manager(this Pawn p)
+        public static VerbManager Manager(this Pawn p, bool createIfMissing = true)
         {
-            return Base.Prepatcher ? PrepatchedVerbManager(p) : WorldComponent_MVCF.GetStorage().GetManagerFor(p);
+            return Base.Prepatcher
+                ? PrepatchedVerbManager(p, createIfMissing)
+                : WorldComponent_MVCF.GetComp().GetManagerFor(p, createIfMissing);
         }
 
-        public static VerbManager PrepatchedVerbManager(Pawn p)
+        public static VerbManager PrepatchedVerbManager(Pawn p, bool createIfMissing = true)
         {
-            if (p.MVCF_VerbManager == null)
+            if (p.MVCF_VerbManager == null && createIfMissing)
             {
                 p.MVCF_VerbManager = new VerbManager();
                 p.MVCF_VerbManager.Initialize(p);
@@ -37,28 +39,34 @@ namespace MVCF.Utilities
             return p.Manager().AllRangedVerbsNoEquipmentNoApparel;
         }
 
-        public static Verb BestVerbForTarget(this Pawn p, LocalTargetInfo target, IEnumerable<ManagedVerb> verbs)
+        public static Verb BestVerbForTarget(this Pawn p, LocalTargetInfo target, IEnumerable<ManagedVerb> verbs,
+            VerbManager man = null)
         {
-//            Log.Message("BestVerbForTarget: " + p + ", " + target);
+            if (!target.IsValid || !target.Cell.InBounds(p.Map))
+            {
+                Log.Error("[MVCF] BestVerbForTarget given invalid target with pawn " + p + " and target " + target);
+                if (man?.debugOpts != null && man.debugOpts.ScoreLogging)
+                    Log.Error("(Current job is " + p.CurJob + " with verb " + p.CurJob?.verbToUse + " and target " +
+                              p.CurJob?.targetA + ")");
+                return null;
+            }
+
             Verb bestVerb = null;
             float bestScore = 0;
             foreach (var verb in verbs)
             {
-                if (!(verb.Verb.CanHitTarget(target) && verb.Enabled)) continue;
-                var score = VerbScore(p, verb.Verb, target);
-//                Log.Message("    Verb " + verb.Label() + " has score " + score);
+                var score = VerbScore(p, verb.Verb, target, man != null && man.debugOpts.ScoreLogging);
                 if (score <= bestScore) continue;
                 bestScore = score;
                 bestVerb = verb.Verb;
             }
 
-//            Log.Message("    Best verb is " + bestVerb?.Label());
-
             return bestVerb;
         }
 
-        private static float VerbScore(Pawn p, Verb verb, LocalTargetInfo target)
+        private static float VerbScore(Pawn p, Verb verb, LocalTargetInfo target, bool debug = false)
         {
+            if (debug) Log.Message("Getting score of " + verb + " with target " + target);
             var report = ShotReport.HitReportFor(p, verb, target);
             var damage = report.TotalEstimatedHitChance * verb.verbProps.burstShotCount * GetDamage(verb);
             var timeSpent = verb.verbProps.AdjustedCooldownTicks(verb, p) + verb.verbProps.warmupTime.SecondsToTicks();

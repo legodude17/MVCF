@@ -14,19 +14,20 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>../../Assemblies</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>..\..\1.2\Assemblies\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>../../Assemblies</OutputPath>
+    <OutputPath>..\..\1.2\Assemblies\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,6 +39,7 @@
     </Reference>
     <Reference Include="Assembly-CSharp_prepatched">
       <HintPath>..\..\..\..\RimWorldWin64_Data\Managed\Assembly-CSharp_prepatched.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,7 +61,9 @@
   <ItemGroup>
     <Compile Include="Comps\HediffComp_ExtendedVerbGiver.cs" />
     <Compile Include="Comps\Properties.cs" />
+    <Compile Include="DebugActionsMVCF.cs" />
     <Compile Include="Harmony\Brawlers.cs" />
+    <Compile Include="Harmony\Compat.cs" />
     <Compile Include="Harmony\Gizmos.cs" />
     <Compile Include="Harmony\Trackers.cs">
       <DependentUpon>
@@ -71,13 +75,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VerbManager.cs" />
     <Compile Include="Verbs\Verb_Jump.cs" />
+    <Compile Include="Verbs\Verb_SmokePop.cs" />
     <Compile Include="WorldComponent_MVCF.cs" />
     <Compile Include="Base.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="Utilities\PawnVerbGizmoUtility.cs" />
     <Compile Include="Utilities\PawnVerbUtility.cs" />
     <Compile Include="Comps\Comp_VerbGiver.cs" />
-    <Compile Include="Harmony\Debug.cs" />
     <Compile Include="Harmony\Pawn_TryGetAttackVerb.cs" />
     <Compile Include="Harmony\MiscPatches.cs" />
   </ItemGroup>

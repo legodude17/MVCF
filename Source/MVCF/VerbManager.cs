@@ -16,7 +16,10 @@ namespace MVCF
         private readonly List<TurretVerb> tickVerbs = new List<TurretVerb>();
         private readonly List<ManagedVerb> verbs = new List<ManagedVerb>();
         public Verb CurrentVerb;
-        public Verb SearchVerb = new Verb_LaunchProjectileStatic();
+        public DebugOptions debugOpts;
+        public bool HasVerbs;
+        public Verb SearchVerb;
+        public bool NeedsTicking { get; private set; }
 
         public IEnumerable<Verb> AllVerbs => verbs.Select(mv => mv.Verb);
         public IEnumerable<Verb> AllRangedVerbs => verbs.Select(mv => mv.Verb).Where(verb => !verb.IsMeleeAttack);
@@ -50,9 +53,10 @@ namespace MVCF
                 range = 0,
                 minRange = 9999,
                 targetParams = new TargetingParameters(),
-                ai_IsWeapon = true,
-                verbClass = typeof(Verb_Shoot),
-                label = Base.SearchLabel
+                verbClass = typeof(Verb_Search),
+                label = Base.SearchLabel,
+                defaultProjectile = ThingDef.Named("Bullet_Revolver"),
+                onlyManualCast = false
             }
         };
 
@@ -60,11 +64,24 @@ namespace MVCF
         public ImplementOwnerTypeDef ImplementOwnerTypeDef => ImplementOwnerTypeDefOf.NativeVerb;
         public Thing ConstantCaster => Pawn;
 
+        public ManagedVerb GetManagedVerbForVerb(Verb verb, bool warnOnFailed = true)
+        {
+            var mv = verbs.FirstOrFallback(v => v.Verb == verb);
+            if (mv == null && warnOnFailed)
+                Log.ErrorOnce("[MVCF] Attempted to get ManagedVerb for verb " + verb.Label() +
+                              " which does not have one. This may cause issues.", verb.Label().GetHashCode());
+
+            return mv;
+        }
+
         public void Initialize(Pawn pawn)
         {
             Pawn = pawn;
             VerbTracker = new VerbTracker(this);
-            SearchVerb = VerbTracker.PrimaryVerb;
+            SearchVerb = (Verb_Search) VerbTracker.PrimaryVerb;
+            NeedsTicking = false;
+            debugOpts.ScoreLogging = false;
+            debugOpts.VerbLogging = false;
             foreach (var verb in pawn.VerbTracker.AllVerbs)
                 AddVerb(verb, VerbSource.RaceDef, pawn.TryGetComp<Comp_VerbGiver>()?.PropsFor(verb));
             if (pawn?.health?.hediffSet?.hediffs != null)
@@ -83,7 +100,7 @@ namespace MVCF
                 foreach (var apparel in pawn.apparel.WornApparel)
                 {
                     var comp = apparel.TryGetComp<Comp_VerbGiver>();
-                    if (comp == null) return;
+                    if (comp == null) continue;
                     foreach (var verb in comp.VerbTracker.AllVerbs)
                         AddVerb(verb, VerbSource.Apparel, comp.PropsFor(verb));
                 }
@@ -95,7 +112,7 @@ namespace MVCF
                     if (comp == null)
                     {
                         var extComp = eq.TryGetComp<Comp_VerbGiver>();
-                        if (extComp == null) return;
+                        if (extComp == null) continue;
                         foreach (var verb in extComp.VerbTracker.AllVerbs)
                             AddVerb(verb, VerbSource.Equipment, extComp.PropsFor(verb));
                     }
@@ -110,37 +127,28 @@ namespace MVCF
 
         public void AddVerb(Verb verb, VerbSource source, AdditionalVerbProps props)
         {
-            // Log.Message("AddVerb " + verb + ", " + source + ", " + props);
             ManagedVerb mv;
             if (props != null && props.canFireIndependently)
             {
-                var tv = new TurretVerb(verb, source, props);
+                var tv = new TurretVerb(verb, source, props, this);
+                if (tickVerbs.Count == 0)
+                {
+                    NeedsTicking = true;
+                    WorldComponent_MVCF.GetComp().TickManagers.Add(new System.WeakReference<VerbManager>(this));
+                }
+
                 tickVerbs.Add(tv);
                 mv = tv;
             }
             else
             {
-                mv = new ManagedVerb(verb, source, props);
+                mv = new ManagedVerb(verb, source, props, this);
             }
 
-            verbs.Add(mv);
             if (props != null && props.draw) drawVerbs.Add(mv);
 
-            if (verb.verbProps.range > SearchVerb.verbProps.range) SearchVerb.verbProps.range = verb.verbProps.range;
-            if (verb.verbProps.minRange < SearchVerb.verbProps.minRange)
-                SearchVerb.verbProps.minRange = verb.verbProps.minRange;
-            SearchVerb.verbProps.targetParams = new TargetingParameters
-            {
-                canTargetAnimals = AllVerbs.Any(v => v.targetParams.canTargetAnimals),
-                canTargetBuildings = AllVerbs.Any(v => v.targetParams.canTargetBuildings),
-                canTargetPawns = AllVerbs.Any(v => v.targetParams.canTargetPawns),
-                canTargetFires = AllVerbs.Any(v => v.targetParams.canTargetFires),
-                canTargetHumans = AllVerbs.Any(v => v.targetParams.canTargetHumans),
-                canTargetItems = AllVerbs.Any(v => v.targetParams.canTargetItems),
-                canTargetLocations = AllVerbs.Any(v => v.targetParams.canTargetLocations),
-                canTargetMechs = AllVerbs.Any(v => v.targetParams.canTargetMechs),
-                canTargetSelf = AllVerbs.Any(v => v.targetParams.canTargetSelf)
-            };
+            verbs.Add(mv);
+            RecalcSearchVerb();
         }
 
         public void RemoveVerb(Verb verb)
@@ -150,23 +158,61 @@ namespace MVCF
             verbs.Remove(mv);
             if (drawVerbs.Contains(mv)) drawVerbs.Remove(mv);
             var idx = tickVerbs.FindIndex(tv => tv.Verb == verb);
-            if (idx >= 0) tickVerbs.RemoveAt(idx);
+            if (idx >= 0)
+            {
+                tickVerbs.RemoveAt(idx);
+                if (tickVerbs.Count == 0)
+                {
+                    NeedsTicking = false;
+                    WorldComponent_MVCF.GetComp().TickManagers.RemoveAll(wr =>
+                    {
+                        if (!wr.TryGetTarget(out var man)) return true;
+                        return man == this;
+                    });
+                }
+            }
 
-            if (verb.verbProps.range >= SearchVerb.verbProps.range)
-                SearchVerb.verbProps.range = AllVerbs.Select(v => v.verbProps.range).Max();
-            if (verb.verbProps.minRange <= SearchVerb.verbProps.minRange)
-                SearchVerb.verbProps.minRange = AllVerbs.Select(v => v.verbProps.minRange).Min();
+            RecalcSearchVerb();
+        }
+
+        public void RecalcSearchVerb()
+        {
+            if (debugOpts.VerbLogging) Log.Message("RecalcSearchVerb");
+            var verbsToUse = verbs
+                .Where(v => v.Enabled && (v.Props == null || !v.Props.canFireIndependently) && !v.Verb.IsMeleeAttack)
+                .ToList();
+            if (debugOpts.VerbLogging) verbsToUse.ForEach(v => Log.Message("Verb: " + v.Verb));
+            if (verbsToUse.Count == 0)
+            {
+                HasVerbs = false;
+                if (debugOpts.VerbLogging) Log.Message("No Verbs");
+                return;
+            }
+
+            HasVerbs = true;
+
+            SearchVerb.verbProps.range = verbsToUse.Select(v => v.Verb.verbProps.range).Max();
+            if (debugOpts.VerbLogging) Log.Message("Resulting range: " + SearchVerb.verbProps.range);
+            SearchVerb.verbProps.minRange = verbsToUse.Select(v => v.Verb.verbProps.minRange).Min();
+            if (debugOpts.VerbLogging) Log.Message("Resulting minRange: " + SearchVerb.verbProps.minRange);
+            SearchVerb.verbProps.requireLineOfSight = verbsToUse.All(v => v.Verb.verbProps.requireLineOfSight);
+            if (debugOpts.VerbLogging)
+                Log.Message("Resulting requireLineOfSight: " + SearchVerb.verbProps.requireLineOfSight);
+            SearchVerb.verbProps.mustCastOnOpenGround = verbsToUse.All(v => v.Verb.verbProps.mustCastOnOpenGround);
+            if (debugOpts.VerbLogging)
+                Log.Message("Resulting mustCastOnOpenGround: " + SearchVerb.verbProps.mustCastOnOpenGround);
+            var targetParams = verbsToUse.Select(mv => mv.Verb.targetParams).ToList();
             SearchVerb.verbProps.targetParams = new TargetingParameters
             {
-                canTargetAnimals = AllVerbs.Any(v => v.targetParams.canTargetAnimals),
-                canTargetBuildings = AllVerbs.Any(v => v.targetParams.canTargetBuildings),
-                canTargetPawns = AllVerbs.Any(v => v.targetParams.canTargetPawns),
-                canTargetFires = AllVerbs.Any(v => v.targetParams.canTargetFires),
-                canTargetHumans = AllVerbs.Any(v => v.targetParams.canTargetHumans),
-                canTargetItems = AllVerbs.Any(v => v.targetParams.canTargetItems),
-                canTargetLocations = AllVerbs.Any(v => v.targetParams.canTargetLocations),
-                canTargetMechs = AllVerbs.Any(v => v.targetParams.canTargetMechs),
-                canTargetSelf = AllVerbs.Any(v => v.targetParams.canTargetSelf)
+                canTargetAnimals = targetParams.Any(tp => tp.canTargetAnimals),
+                canTargetBuildings = targetParams.Any(tp => tp.canTargetBuildings),
+                canTargetPawns = targetParams.Any(tp => tp.canTargetPawns),
+                canTargetFires = targetParams.Any(tp => tp.canTargetFires),
+                canTargetHumans = targetParams.Any(tp => tp.canTargetHumans),
+                canTargetItems = targetParams.Any(tp => tp.canTargetItems),
+                canTargetLocations = targetParams.Any(tp => tp.canTargetLocations),
+                canTargetMechs = targetParams.Any(tp => tp.canTargetMechs),
+                canTargetSelf = targetParams.Any(tp => tp.canTargetSelf)
             };
         }
 
@@ -183,17 +229,24 @@ namespace MVCF
 
     public class ManagedVerb
     {
+        private readonly VerbManager man;
         public bool Enabled = true;
         public AdditionalVerbProps Props;
         public VerbSource Source;
         public Verb Verb;
 
-        public ManagedVerb(Verb verb, VerbSource source, AdditionalVerbProps props)
+        public ManagedVerb(Verb verb, VerbSource source, AdditionalVerbProps props, VerbManager man)
         {
             Verb = verb;
             Source = source;
             Props = props;
-            props?.Initialize();
+            this.man = man;
+        }
+
+        public void Toggle()
+        {
+            Enabled = !Enabled;
+            man.RecalcSearchVerb();
         }
 
         public void DrawOn(Pawn p, Vector3 drawPos)
@@ -263,7 +316,8 @@ namespace MVCF
         private int warmUpTicksLeft;
 
 
-        public TurretVerb(Verb verb, VerbSource source, AdditionalVerbProps props) : base(verb, source, props)
+        public TurretVerb(Verb verb, VerbSource source, AdditionalVerbProps props, VerbManager man) : base(verb, source,
+            props, man)
         {
             pawn = verb.CasterPawn;
             dummyCaster = new DummyCaster(pawn);
@@ -275,11 +329,6 @@ namespace MVCF
 
         public void Tick()
         {
-            // Log.Message("TurretVerb Tick:");
-            // Log.Message("  Bursting: " + Verb.Bursting);
-            // Log.Message("  cooldown: " + cooldownTicksLeft);
-            // Log.Message("  warmup: " + warmUpTicksLeft);
-            // Log.Message("  currentTarget: " + currentTarget);
             Verb.VerbTick();
             if (Verb.Bursting) return;
             if (cooldownTicksLeft > 0) cooldownTicksLeft--;
@@ -287,7 +336,6 @@ namespace MVCF
             if (cooldownTicksLeft > 0) return;
             if (!currentTarget.IsValid || currentTarget.HasThing && currentTarget.ThingDestroyed)
             {
-                // Log.Message("Attempting to find a target");
                 var man = pawn.Manager();
                 var sv = man.SearchVerb;
                 man.SearchVerb = Verb;
@@ -299,17 +347,14 @@ namespace MVCF
             }
             else if (warmUpTicksLeft == 0)
             {
-                // Log.Message("Starting cast!");
                 TryCast();
             }
             else if (warmUpTicksLeft > 0)
             {
-                // Log.Message("Still warming up");
                 warmUpTicksLeft--;
             }
             else
             {
-                // Log.Message("Firing again");
                 TryStartCast();
             }
         }
@@ -326,7 +371,7 @@ namespace MVCF
         private void TryCast()
         {
             warmUpTicksLeft = -1;
-            Verb.TryStartCastOn(currentTarget);
+            var success = Verb.TryStartCastOn(currentTarget);
         }
 
         public override LocalTargetInfo PointingTarget(Pawn p)
@@ -342,7 +387,11 @@ namespace MVCF
         public DummyCaster(Pawn pawn)
         {
             this.pawn = pawn;
-            def = new ThingDef();
+            def = ThingDef.Named("MVCF_Dummy");
+        }
+
+        public DummyCaster()
+        {
         }
 
         public override Vector3 DrawPos => pawn.DrawPos;
@@ -359,6 +408,27 @@ namespace MVCF
 
         public override void DrawAt(Vector3 drawLoc, bool flip = false)
         {
+        }
+
+        public override void SpawnSetup(Map map, bool respawningAfterLoad)
+        {
+            base.SpawnSetup(map, respawningAfterLoad);
+            if (respawningAfterLoad) Destroy();
+        }
+    }
+
+    public class Verb_Search : Verb_LaunchProjectile
+    {
+        public override bool TryStartCastOn(LocalTargetInfo castTarg, LocalTargetInfo destTarg,
+            bool surpriseAttack = false,
+            bool canHitNonTargetPawns = true)
+        {
+            return false;
+        }
+
+        protected override bool TryCastShot()
+        {
+            return false;
         }
     }
 }

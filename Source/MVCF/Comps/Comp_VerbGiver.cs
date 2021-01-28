@@ -52,7 +52,8 @@ namespace MVCF.Comps
         public override void CompTick()
         {
             base.CompTick();
-            verbTracker.VerbsTick();
+            if (verbTracker.AllVerbs?[0]?.caster != null)
+                verbTracker.VerbsTick();
         }
 
         public void Notify_Worn(Pawn pawn)
@@ -70,6 +71,7 @@ namespace MVCF.Comps
             {
                 verb.Notify_EquipmentLost();
                 verb.caster = null;
+                verb.state = VerbState.Idle;
             }
         }
 
@@ -80,14 +82,14 @@ namespace MVCF.Comps
             var man = (parent as Apparel)?.Wearer?.Manager();
             if (man == null) yield break;
             foreach (var gizmo in from verb in verbTracker.AllVerbs
-                from gizmo in verb.GetGizmosForVerb(man.ManagedVerbs.First(managed => managed.Verb == verb))
+                from gizmo in verb.GetGizmosForVerb(man.GetManagedVerbForVerb(verb))
                 select gizmo) yield return gizmo;
         }
 
         public AdditionalVerbProps PropsFor(Verb verb)
         {
             var label = verb.verbProps.label;
-            return string.IsNullOrEmpty(label) ? null : Props.verbProps.FirstOrDefault(prop => prop.label == label);
+            return string.IsNullOrEmpty(label) ? null : Props.verbProps?.FirstOrDefault(prop => prop.label == label);
         }
     }
 }

@@ -16,7 +16,8 @@ namespace MVCF.Harmony
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
-            __result = man.AllVerbs.Any(v => v.IsEMP());
+            if (man == null) return true;
+            __result = man.ManagedVerbs.Any(v => v.Enabled && v.Verb.IsEMP());
             return false;
         }
 
@@ -28,7 +29,8 @@ namespace MVCF.Harmony
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
-            __result = man.AllVerbs.Any(v => v.IsIncendiary());
+            if (man == null) return true;
+            __result = man.ManagedVerbs.Any(v => v.Enabled && v.Verb.IsIncendiary());
             return false;
         }
 
@@ -40,7 +42,8 @@ namespace MVCF.Harmony
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
-            __result = man.AllVerbs.Any(v => v.UsesExplosiveProjectiles());
+            if (man == null) return true;
+            __result = man.ManagedVerbs.Any(v => v.Enabled && v.Verb.UsesExplosiveProjectiles());
             return false;
         }
 
@@ -52,7 +55,8 @@ namespace MVCF.Harmony
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
-            __result = man.AllVerbs.Any(v => v.ProjectileFliesOverhead());
+            if (man == null) return true;
+            __result = man.ManagedVerbs.Any(v => v.Enabled && v.Verb.ProjectileFliesOverhead());
             return false;
         }
 
@@ -64,7 +68,8 @@ namespace MVCF.Harmony
             if (verb.verbProps.label != Base.SearchLabel) return true;
             if (!(verb.caster is Pawn p)) return true;
             var man = p.Manager();
-            __result = man.AllVerbs.Any(v => v.HarmsHealth());
+            if (man == null) return true;
+            __result = man.ManagedVerbs.Any(v => v.Enabled && v.Verb.HarmsHealth());
             return false;
         }
     }

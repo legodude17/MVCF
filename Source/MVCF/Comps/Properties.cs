@@ -14,6 +14,15 @@ namespace MVCF.Comps
         {
             compClass = typeof(HediffComp_ExtendedVerbGiver);
         }
+
+        public override void PostLoad()
+        {
+            base.PostLoad();
+            LongEventHandler.ExecuteWhenFinished(delegate
+            {
+                foreach (var props in verbProps) props.Initialize();
+            });
+        }
     }
 
     public class CompProperties_VerbGiver : CompProperties
@@ -24,6 +33,16 @@ namespace MVCF.Comps
         {
             compClass = typeof(Comp_VerbGiver);
         }
+
+        public override void PostLoadSpecial(ThingDef parent)
+        {
+            base.PostLoadSpecial(parent);
+            if (verbProps != null)
+                LongEventHandler.ExecuteWhenFinished(delegate
+                {
+                    foreach (var props in verbProps) props.Initialize();
+                });
+        }
     }
 
     public class AdditionalVerbProps
@@ -31,13 +50,17 @@ namespace MVCF.Comps
         public bool canBeToggled;
         public bool canFireIndependently;
         public DrawPosition defaultPosition;
+        public string description;
         public bool draw;
         public GraphicData graphic;
         public string label;
         private Dictionary<string, DrawPosition> positions;
+        public bool separateToggle;
         public List<DrawPosition> specificPositions;
+        public string toggleDescription;
         public string toggleIconPath;
         public string toggleLabel;
+        public string visualLabel;
 
         public Texture2D ToggleIcon { get; private set; }
         public Graphic Graphic { get; private set; }
@@ -55,7 +78,9 @@ namespace MVCF.Comps
         {
             if (!string.IsNullOrWhiteSpace(toggleIconPath))
                 ToggleIcon = ContentFinder<Texture2D>.Get(toggleIconPath);
-            if (graphic != null) Graphic = graphic.Graphic;
+            if (graphic != null)
+                Graphic = graphic.Graphic;
+
             if (positions == null)
             {
                 positions = new Dictionary<string, DrawPosition>();
