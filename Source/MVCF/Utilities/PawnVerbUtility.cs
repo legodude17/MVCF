@@ -17,8 +17,12 @@ namespace MVCF.Utilities
         {
             if (p.MVCF_VerbManager == null && createIfMissing)
             {
+                var comp = WorldComponent_MVCF.GetComp();
                 p.MVCF_VerbManager = new VerbManager();
                 p.MVCF_VerbManager.Initialize(p);
+                comp.allManagers.Add(new System.WeakReference<VerbManager>(p.MVCF_VerbManager));
+                if (comp.currentVerbSaved != null && comp.currentVerbSaved.TryGetValue(p, out var currentVerb))
+                    p.MVCF_VerbManager.CurrentVerb = currentVerb;
             }
 
             return p.MVCF_VerbManager;
@@ -42,10 +46,11 @@ namespace MVCF.Utilities
         public static Verb BestVerbForTarget(this Pawn p, LocalTargetInfo target, IEnumerable<ManagedVerb> verbs,
             VerbManager man = null)
         {
+            var debug = man?.debugOpts != null && man.debugOpts.ScoreLogging;
             if (!target.IsValid || !target.Cell.InBounds(p.Map))
             {
                 Log.Error("[MVCF] BestVerbForTarget given invalid target with pawn " + p + " and target " + target);
-                if (man?.debugOpts != null && man.debugOpts.ScoreLogging)
+                if (debug)
                     Log.Error("(Current job is " + p.CurJob + " with verb " + p.CurJob?.verbToUse + " and target " +
                               p.CurJob?.targetA + ")");
                 return null;
@@ -55,12 +60,14 @@ namespace MVCF.Utilities
             float bestScore = 0;
             foreach (var verb in verbs)
             {
-                var score = VerbScore(p, verb.Verb, target, man != null && man.debugOpts.ScoreLogging);
+                var score = VerbScore(p, verb.Verb, target, debug);
+                if (debug) Log.Message("Score is " + score + " compared to " + bestScore);
                 if (score <= bestScore) continue;
                 bestScore = score;
                 bestVerb = verb.Verb;
             }
 
+            if (debug) Log.Message("BestVerbForTarget returning " + bestVerb);
             return bestVerb;
         }
 
@@ -70,6 +77,14 @@ namespace MVCF.Utilities
             var report = ShotReport.HitReportFor(p, verb, target);
             var damage = report.TotalEstimatedHitChance * verb.verbProps.burstShotCount * GetDamage(verb);
             var timeSpent = verb.verbProps.AdjustedCooldownTicks(verb, p) + verb.verbProps.warmupTime.SecondsToTicks();
+            if (debug)
+            {
+                Log.Message("HitChance: " + report.TotalEstimatedHitChance);
+                Log.Message("Damage: " + damage);
+                Log.Message("timeSpent: " + timeSpent);
+                Log.Message("Score of " + verb + " on target " + target + " is " + damage / timeSpent);
+            }
+
             return damage / timeSpent;
         }
 

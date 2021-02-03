@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ThingDef>
+		<defName>MVCF_Dummy</defName>
+		<label>dummy</label>
+		<description>no</description>
+		<selectable>false</selectable>
+		<thingClass>MVCF.DummyCaster</thingClass>
+		<tickerType>Normal</tickerType>
+	</ThingDef>
+
+	<MVCF.ModDef>
+		<defName>MVCF_EnableAll</defName>
+		<label>Enable all features</label>
+		<description>All features will be enabled if this def is included.</description>
+		<Features>
+			<Drawing>true</Drawing>
+			<ExtraEquipmentVerbs>true</ExtraEquipmentVerbs>
+			<IndependentFire>true</IndependentFire>
+			<IntegratedToggle>true</IntegratedToggle>
+			<RangedAnimals>true</RangedAnimals>
+			<HediffVerbs>true</HediffVerbs>
+			<ApparelVerbs>true</ApparelVerbs>
+		</Features>
+	</MVCF.ModDef>
+</Defs>

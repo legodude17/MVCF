@@ -13,7 +13,7 @@ namespace MVCF.Utilities
 
         public static IEnumerable<Gizmo> GetGizmosForVerb(this Verb verb, ManagedVerb man = null)
         {
-            AdditionalVerbProps props = null;
+            var props = man?.Props;
 
             Thing ownerThing = null;
             switch (verb.DirectOwner)
@@ -37,15 +37,19 @@ namespace MVCF.Utilities
                     break;
             }
 
-            var gizmo = new Command_VerbTarget();
+            Command gizmo;
+            var command = new Command_VerbTarget {verb = verb};
+            gizmo = command;
+
 
             if (ownerThing != null)
             {
-                gizmo.defaultDesc = FirstNonEmptyString(props?.description, ownerThing.def.LabelCap + ": " + ownerThing
-                    .def.description
-                    .Truncate(500, __truncateCache)
-                    .CapitalizeFirst());
-                gizmo.icon = verb.Icon(null, ownerThing);
+                gizmo.defaultDesc = FirstNonEmptyString(props?.description, ownerThing.def.LabelCap + ": " +
+                                                                            ownerThing
+                                                                                .def?.description?
+                                                                                .Truncate(500, __truncateCache)?
+                                                                                .CapitalizeFirst());
+                gizmo.icon = verb.Icon(props, ownerThing, false);
             }
             else if (verb.DirectOwner is HediffComp_VerbGiver hediffGiver)
             {
@@ -54,14 +58,13 @@ namespace MVCF.Utilities
                                                                             hediff.def.description
                                                                                 .Truncate(500, __truncateCache)
                                                                                 .CapitalizeFirst());
-                gizmo.icon = verb.Icon(null, null);
+                gizmo.icon = verb.Icon(props, null, false);
             }
 
             gizmo.tutorTag = "VerbTarget";
-            gizmo.verb = verb;
             gizmo.defaultLabel = verb.Label(props);
 
-            if (verb.caster.Faction != Faction.OfPlayer)
+            if (verb.Caster.Faction != Faction.OfPlayer)
             {
                 gizmo.Disable("CannotOrderNonControlled".Translate());
             }
@@ -70,15 +73,16 @@ namespace MVCF.Utilities
                 if (verb.CasterPawn.WorkTagIsDisabled(WorkTags.Violent))
                     gizmo.Disable("IsIncapableOfViolence".Translate(verb.CasterPawn.LabelShort,
                         verb.CasterPawn));
-                else if (!verb.CasterPawn.drafter.Drafted)
+                else if (!(verb.CasterPawn.drafter == null || verb.CasterPawn.drafter.Drafted))
                     gizmo.Disable("IsNotDrafted".Translate(verb.CasterPawn.LabelShort,
                         verb.CasterPawn));
             }
 
             yield return gizmo;
 
+
             if (props != null && props.canBeToggled && man != null && verb.caster.Faction == Faction.OfPlayer &&
-                props.separateToggle)
+                props.separateToggle || verb.CasterIsPawn && verb.CasterPawn.RaceProps.Animal)
                 yield return new Command_ToggleVerbUsage(man);
         }
 
@@ -132,9 +136,10 @@ namespace MVCF.Utilities
             return VerbLabel(verb, props).CapitalizeFirst();
         }
 
-        public static Texture2D Icon(this Verb verb, AdditionalVerbProps props, Thing ownerThing)
+        public static Texture2D Icon(this Verb verb, AdditionalVerbProps props, Thing ownerThing, bool toggle)
         {
-            if (props?.ToggleIcon != null && props.ToggleIcon != BaseContent.BadTex) return props.ToggleIcon;
+            if (toggle && props?.ToggleIcon != null && props.ToggleIcon != BaseContent.BadTex) return props.ToggleIcon;
+            if (props?.Graphic != null && props.Icon != null && props.Icon != BaseContent.BadTex) return props.Icon;
             if (verb.UIIcon != null && verb.verbProps.commandIcon != null && verb.UIIcon != BaseContent.BadTex)
                 return verb.UIIcon;
             if (verb is Verb_LaunchProjectile proj) return proj.Projectile.uiIcon;
