@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using MVCF.Utilities;
@@ -10,11 +11,29 @@ namespace MVCF.Harmony
 {
     public class Pawn_TryGetAttackVerb
     {
+        public static List<JobDef> AggressiveJobs;
+
         public static void DoPatches(HarmonyLib.Harmony harm)
         {
             harm.Patch(AccessTools.Method(typeof(Pawn), "TryGetAttackVerb"),
                 new HarmonyMethod(typeof(Pawn_TryGetAttackVerb), "Prefix"),
                 new HarmonyMethod(typeof(Pawn_TryGetAttackVerb), "Postfix"));
+            AggressiveJobs = new List<JobDef>
+            {
+                // Vanilla:
+                JobDefOf.AttackStatic,
+                JobDefOf.AttackMelee,
+                JobDefOf.UseVerbOnThing,
+                JobDefOf.UseVerbOnThingStatic,
+                // Misc. Training:
+                DefDatabase<JobDef>.GetNamedSilentFail("ArcheryShootArrows"),
+                DefDatabase<JobDef>.GetNamedSilentFail("UseShootingRange"),
+                DefDatabase<JobDef>.GetNamedSilentFail("UseShootingRange_NonJoy"),
+                DefDatabase<JobDef>.GetNamedSilentFail("UseMartialArtsTarget"),
+                DefDatabase<JobDef>.GetNamedSilentFail("UseMartialArtsTarget_NonJoy"),
+                // Combat Training and Forked Version:
+                DefDatabase<JobDef>.GetNamedSilentFail("TrainOnCombatDummy")
+            }.Where(def => def != null).ToList();
         }
 
         public static Verb AttackVerb(Pawn pawn, Thing target, bool allowManualCastWeapons = false)
@@ -23,13 +42,13 @@ namespace MVCF.Harmony
             var job = pawn.CurJob;
 
             if (manager.debugOpts.VerbLogging)
-                Log.Message("TryGetAttackVerb of " + pawn + " on target " + target + " with job " + job +
+                Log.Message("AttackVerb of " + pawn + " on target " + target + " with job " + job +
                             " that has target " + job?.targetA + " and CurrentVerb " + manager.CurrentVerb +
                             " and OverrideVerb " + manager.OverrideVerb);
 
             if (manager.OverrideVerb != null) return manager.OverrideVerb;
 
-            if (target == null && (job == null || !job.targetA.IsValid || job.def != JobDefOf.AttackStatic ||
+            if (target == null && (job == null || !job.targetA.IsValid || !AggressiveJobs.Contains(job.def) ||
                                    !job.targetA.HasThing && (job.targetA.Cell == pawn.Position ||
                                                              !job.targetA.Cell.InBounds(pawn.Map))))
             {

@@ -28,7 +28,7 @@ namespace MVCF.Harmony
                 postfix: new HarmonyMethod(typeof(Gizmos), "Pawn_GetGizmos_Postfix"));
         }
 
-        public static void DoSeparateTogglePatches(HarmonyLib.Harmony harm)
+        public static void DoIntegratedTogglePatches(HarmonyLib.Harmony harm)
         {
             harm.Patch(AccessTools.Method(typeof(Command), "GizmoOnGUIInt"),
                 transpiler: new HarmonyMethod(typeof(Gizmos), "GizmoOnGUI_Transpile"));
@@ -166,9 +166,13 @@ namespace MVCF.Harmony
             if (shrunk) return false;
             if (!(command is Command_VerbTarget gizmo)) return false;
             var verb = gizmo.verb;
-            var man = gizmo.verb?.caster is IFakeCaster caster
-                ? (caster.RealCaster() as Pawn)?.Manager()?.GetManagedVerbForVerb(verb, false)
-                : gizmo.verb?.CasterPawn?.Manager(false)?.GetManagedVerbForVerb(verb, false);
+            if (!verb.CasterIsPawn) return false;
+            var pawn = verb.CasterPawn;
+            if (pawn.Faction != Faction.OfPlayer) return false;
+            var manager = pawn.Manager(false);
+            if (manager == null) return false;
+            if (!pawn.RaceProps.Animal || manager.AllVerbs.Count(v => !v.IsMeleeAttack) <= 1) return false;
+            var man = manager.GetManagedVerbForVerb(verb, false);
             if (man == null) return false;
             if (man.Props != null && man.Props.separateToggle) return false;
             var rect = command.TopRightLabel.NullOrEmpty()
